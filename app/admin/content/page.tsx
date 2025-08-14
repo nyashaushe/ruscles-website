@@ -1,0 +1,454 @@
+"use client"
+
+import { useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Search,
+  MoreHorizontal,
+  Eye,
+  Edit,
+  Trash2,
+  Plus,
+  FileText,
+  MessageSquare,
+  ImageIcon,
+  Calendar,
+  User,
+} from "lucide-react"
+
+export default function ContentPage() {
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const blogPosts = [
+    {
+      id: "BLOG-001",
+      title: "Essential Electrical Safety Tips for Homeowners in 2024",
+      author: "Technical Team",
+      status: "published",
+      publishDate: "2024-01-15",
+      views: 1250,
+      category: "Safety",
+    },
+    {
+      id: "BLOG-002",
+      title: "How to Choose the Right Air Conditioning System",
+      author: "HVAC Specialists",
+      status: "draft",
+      publishDate: null,
+      views: 0,
+      category: "HVAC",
+    },
+    {
+      id: "BLOG-003",
+      title: "Signs Your Electrical Panel Needs an Upgrade",
+      author: "Electrical Team",
+      status: "published",
+      publishDate: "2024-01-10",
+      views: 890,
+      category: "Electrical",
+    },
+  ]
+
+  const testimonials = [
+    {
+      id: "TEST-001",
+      customer: "John Mukamuri",
+      rating: 5,
+      content: "Excellent service! The team was professional and completed the rewiring project on time.",
+      status: "approved",
+      date: "2024-01-12",
+      project: "Residential Rewiring",
+    },
+    {
+      id: "TEST-002",
+      customer: "Fresh Foods Supermarket",
+      rating: 5,
+      content: "Outstanding cold room installation. Very satisfied with the energy efficiency improvements.",
+      status: "pending",
+      date: "2024-01-10",
+      project: "Cold Room Installation",
+    },
+    {
+      id: "TEST-003",
+      customer: "Bella Vista Restaurant",
+      rating: 4,
+      content: "Great HVAC upgrade. Kitchen conditions improved significantly.",
+      status: "approved",
+      date: "2024-01-08",
+      project: "HVAC System Upgrade",
+    },
+  ]
+
+  const portfolioItems = [
+    {
+      id: "PORT-001",
+      title: "Commercial Cold Room Installation",
+      client: "Fresh Foods Supermarket",
+      category: "Commercial Refrigeration",
+      status: "published",
+      featured: true,
+      date: "2024-01-15",
+    },
+    {
+      id: "PORT-002",
+      title: "Residential Electrical Rewiring",
+      client: "The Johnson Family",
+      category: "Residential Electrical",
+      status: "published",
+      featured: false,
+      date: "2024-01-10",
+    },
+    {
+      id: "PORT-003",
+      title: "Restaurant HVAC System Upgrade",
+      client: "Bella Vista Restaurant",
+      category: "Commercial HVAC",
+      status: "draft",
+      featured: false,
+      date: null,
+    },
+  ]
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "published":
+        return "bg-green-100 text-green-800 border-green-200"
+      case "draft":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200"
+      case "approved":
+        return "bg-green-100 text-green-800 border-green-200"
+      case "pending":
+        return "bg-orange-100 text-orange-800 border-orange-200"
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200"
+    }
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Content Management</h1>
+          <p className="text-gray-600 mt-1">Manage your website content, blog posts, and testimonials</p>
+        </div>
+      </div>
+
+      {/* Content Tabs */}
+      <Tabs defaultValue="blog" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="blog" className="flex items-center gap-2">
+            <FileText className="h-4 w-4" />
+            Blog Posts
+          </TabsTrigger>
+          <TabsTrigger value="testimonials" className="flex items-center gap-2">
+            <MessageSquare className="h-4 w-4" />
+            Testimonials
+          </TabsTrigger>
+          <TabsTrigger value="portfolio" className="flex items-center gap-2">
+            <ImageIcon className="h-4 w-4" />
+            Portfolio
+          </TabsTrigger>
+        </TabsList>
+
+        {/* Blog Posts Tab */}
+        <TabsContent value="blog" className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <Input
+                  placeholder="Search blog posts..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-8"
+                />
+              </div>
+            </div>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              New Blog Post
+            </Button>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Blog Posts ({blogPosts.length})</CardTitle>
+              <CardDescription>Manage your blog content and articles</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Title</TableHead>
+                    <TableHead>Author</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Views</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {blogPosts.map((post) => (
+                    <TableRow key={post.id}>
+                      <TableCell>
+                        <div className="font-medium text-gray-900 max-w-xs truncate">{post.title}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <User className="h-4 w-4 text-gray-400" />
+                          {post.author}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{post.category}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getStatusColor(post.status)}>{post.status}</Badge>
+                      </TableCell>
+                      <TableCell>{post.views.toLocaleString()}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                          <Calendar className="h-3 w-3" />
+                          {post.publishDate || "Not published"}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem>
+                              <Eye className="mr-2 h-4 w-4" />
+                              Preview
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-red-600">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Testimonials Tab */}
+        <TabsContent value="testimonials" className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <Input placeholder="Search testimonials..." className="pl-8" />
+              </div>
+            </div>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Testimonial
+            </Button>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Testimonials ({testimonials.length})</CardTitle>
+              <CardDescription>Customer reviews and feedback</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Rating</TableHead>
+                    <TableHead>Content</TableHead>
+                    <TableHead>Project</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {testimonials.map((testimonial) => (
+                    <TableRow key={testimonial.id}>
+                      <TableCell>
+                        <div className="font-medium text-gray-900">{testimonial.customer}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1">
+                          {"★".repeat(testimonial.rating)}
+                          <span className="text-sm text-gray-500 ml-1">({testimonial.rating}/5)</span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="max-w-xs truncate text-sm text-gray-600">{testimonial.content}</div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{testimonial.project}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getStatusColor(testimonial.status)}>{testimonial.status}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                          <Calendar className="h-3 w-3" />
+                          {testimonial.date}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem>
+                              <Eye className="mr-2 h-4 w-4" />
+                              View Full
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            {testimonial.status === "pending" && <DropdownMenuItem>Approve</DropdownMenuItem>}
+                            <DropdownMenuItem className="text-red-600">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Portfolio Tab */}
+        <TabsContent value="portfolio" className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <Input placeholder="Search portfolio items..." className="pl-8" />
+              </div>
+            </div>
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Add Portfolio Item
+            </Button>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Portfolio Items ({portfolioItems.length})</CardTitle>
+              <CardDescription>Showcase your completed projects</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Project</TableHead>
+                    <TableHead>Client</TableHead>
+                    <TableHead>Category</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Featured</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {portfolioItems.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell>
+                        <div className="font-medium text-gray-900 max-w-xs truncate">{item.title}</div>
+                      </TableCell>
+                      <TableCell>{item.client}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{item.category}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getStatusColor(item.status)}>{item.status}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        {item.featured ? (
+                          <Badge className="bg-blue-100 text-blue-800 border-blue-200">Featured</Badge>
+                        ) : (
+                          <span className="text-gray-400">-</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1 text-sm text-gray-600">
+                          <Calendar className="h-3 w-3" />
+                          {item.date || "Not published"}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem>
+                              <Eye className="mr-2 h-4 w-4" />
+                              Preview
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                              {item.featured ? "Remove from Featured" : "Mark as Featured"}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="text-red-600">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}
