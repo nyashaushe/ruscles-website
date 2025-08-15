@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -30,6 +31,7 @@ import {
 } from "lucide-react"
 
 export default function ContentPage() {
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
 
   const blogPosts = [
@@ -149,8 +151,12 @@ export default function ContentPage() {
 
       {/* Content Tabs */}
       <Tabs defaultValue="blog" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="blog" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger 
+            value="blog" 
+            className="flex items-center gap-2"
+            onClick={() => router.push("/admin/content/blog")}
+          >
             <FileText className="h-4 w-4" />
             Blog Posts
           </TabsTrigger>
@@ -161,6 +167,14 @@ export default function ContentPage() {
           <TabsTrigger value="portfolio" className="flex items-center gap-2">
             <ImageIcon className="h-4 w-4" />
             Portfolio
+          </TabsTrigger>
+          <TabsTrigger 
+            value="pages" 
+            className="flex items-center gap-2"
+            onClick={() => router.push("/admin/content/pages")}
+          >
+            <FileText className="h-4 w-4" />
+            Pages
           </TabsTrigger>
         </TabsList>
 
@@ -178,7 +192,7 @@ export default function ContentPage() {
                 />
               </div>
             </div>
-            <Button>
+            <Button onClick={() => router.push("/admin/content/blog/new")}>
               <Plus className="h-4 w-4 mr-2" />
               New Blog Post
             </Button>
@@ -447,6 +461,80 @@ export default function ContentPage() {
               </Table>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Pages Tab */}
+        <TabsContent value="pages" className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+                <Input placeholder="Search pages..." className="pl-8" />
+              </div>
+            </div>
+            <p className="text-sm text-gray-600">
+              Static pages are managed individually. Click on a page to edit its content.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => router.push("/admin/content/pages/about/edit")}>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-blue-600" />
+                  About Us
+                </CardTitle>
+                <CardDescription>Company story, mission, and team information</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span>Last updated: Jan 15, 2024</span>
+                  <Button size="sm" variant="outline">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => router.push("/admin/content/pages/services/edit")}>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-green-600" />
+                  Services
+                </CardTitle>
+                <CardDescription>Service descriptions and offerings</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span>Last updated: Jan 12, 2024</span>
+                  <Button size="sm" variant="outline">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => router.push("/admin/content/pages/contact/edit")}>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-purple-600" />
+                  Contact
+                </CardTitle>
+                <CardDescription>Contact information and business details</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between text-sm text-gray-600">
+                  <span>Last updated: Jan 10, 2024</span>
+                  <Button size="sm" variant="outline">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

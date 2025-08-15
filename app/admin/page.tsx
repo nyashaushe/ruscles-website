@@ -1,34 +1,44 @@
+'use client'
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Users, MessageSquare, Wrench, TrendingUp, Calendar, Phone, Mail, Clock } from "lucide-react"
+import { Users, MessageSquare, Wrench, TrendingUp, Calendar, Phone, Mail, Clock, FileText, ArrowRight } from "lucide-react"
 import Link from "next/link"
+import { useDashboardStats } from "@/hooks/use-dashboard-stats"
+import { UnifiedActivityFeed } from "@/components/admin/unified-activity-feed"
+import { QuickNavigation } from "@/components/admin/quick-navigation"
 
 export default function AdminDashboard() {
+  const { stats: dashboardStats, loading: statsLoading } = useDashboardStats()
+
   const stats = [
     {
-      title: "Total Inquiries",
-      value: "247",
+      title: "Total Submissions",
+      value: dashboardStats?.combined.totalSubmissions.toString() || "0",
       change: "+12%",
       trend: "up",
       icon: MessageSquare,
-      description: "This month",
+      description: "Forms & Inquiries",
+      href: "/admin/inquiries"
     },
     {
-      title: "Active Projects",
-      value: "18",
+      title: "Pending Items",
+      value: dashboardStats?.combined.pendingItems.toString() || "0",
       change: "+3",
+      trend: "up",
+      icon: Clock,
+      description: "Need attention",
+      href: "/admin/forms?status=new"
+    },
+    {
+      title: "Active Items",
+      value: dashboardStats?.combined.activeItems.toString() || "0",
+      change: "+8%",
       trend: "up",
       icon: Wrench,
       description: "In progress",
-    },
-    {
-      title: "New Customers",
-      value: "34",
-      change: "+8%",
-      trend: "up",
-      icon: Users,
-      description: "This month",
+      href: "/admin/inquiries?status=in-progress"
     },
   ]
 
@@ -132,63 +142,112 @@ export default function AdminDashboard() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
         {stats.map((stat, index) => (
-          <Card key={index}>
+          <Card key={index} className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">{stat.title}</CardTitle>
               <stat.icon className="h-4 w-4 text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-              <div className="flex items-center text-xs text-gray-600 mt-1">
-                <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
-                <span className="text-green-600 font-medium">{stat.change}</span>
-                <span className="ml-1">{stat.description}</span>
+              <div className="text-2xl font-bold text-gray-900">{statsLoading ? "..." : stat.value}</div>
+              <div className="flex items-center justify-between text-xs text-gray-600 mt-1">
+                <div className="flex items-center">
+                  <TrendingUp className="h-3 w-3 text-green-500 mr-1" />
+                  <span className="text-green-600 font-medium">{stat.change}</span>
+                  <span className="ml-1">{stat.description}</span>
+                </div>
+                {stat.href && (
+                  <Button asChild variant="ghost" size="sm" className="h-6 px-2">
+                    <Link href={stat.href}>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  </Button>
+                )}
               </div>
             </CardContent>
           </Card>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Inquiries */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Recent Inquiries</CardTitle>
-                <CardDescription>Latest customer inquiries and their status</CardDescription>
-              </div>
-              <Button asChild size="sm">
-                <Link href="/admin/inquiries">View All</Link>
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentInquiries.map((inquiry) => (
-                <div
-                  key={inquiry.id}
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h4 className="font-medium text-gray-900">{inquiry.name}</h4>
-                      <Badge variant="outline" className={getPriorityColor(inquiry.priority)}>
-                        {inquiry.priority}
-                      </Badge>
-                    </div>
-                    <p className="text-sm text-gray-600 mb-1">{inquiry.email}</p>
-                    <p className="text-sm text-gray-500">{inquiry.service}</p>
-                  </div>
-                  <div className="text-right">
-                    <Badge className={getStatusColor(inquiry.status)}>{inquiry.status}</Badge>
-                    <p className="text-xs text-gray-500 mt-1">{inquiry.date}</p>
-                  </div>
+      {/* Forms & Inquiries Overview */}
+      {dashboardStats && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <MessageSquare className="h-5 w-5" />
+                    Inquiries Overview
+                  </CardTitle>
+                  <CardDescription>Traditional inquiry management</CardDescription>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+                <Button asChild size="sm">
+                  <Link href="/admin/inquiries">View All</Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-yellow-50 rounded-lg">
+                  <div className="text-2xl font-bold text-yellow-600">{dashboardStats.inquiries.pending}</div>
+                  <div className="text-sm text-gray-600">Pending</div>
+                </div>
+                <div className="text-center p-3 bg-blue-50 rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600">{dashboardStats.inquiries.inProgress}</div>
+                  <div className="text-sm text-gray-600">In Progress</div>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total Inquiries</span>
+                  <span className="font-medium">{dashboardStats.inquiries.total}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    Forms Overview
+                  </CardTitle>
+                  <CardDescription>New form management system</CardDescription>
+                </div>
+                <Button asChild size="sm">
+                  <Link href="/admin/forms">View All</Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-red-50 rounded-lg">
+                  <div className="text-2xl font-bold text-red-600">{dashboardStats.forms.new}</div>
+                  <div className="text-sm text-gray-600">New</div>
+                </div>
+                <div className="text-center p-3 bg-green-50 rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">{dashboardStats.forms.responded}</div>
+                  <div className="text-sm text-gray-600">Responded</div>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Total Forms</span>
+                  <span className="font-medium">{dashboardStats.forms.total}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Unified Activity Feed */}
+        <div className="lg:col-span-2">
+          <UnifiedActivityFeed />
+        </div>
 
         {/* Today's Tasks */}
         <Card>
@@ -228,41 +287,8 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common tasks and shortcuts</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Button asChild variant="outline" className="h-20 flex-col gap-2 bg-transparent">
-              <Link href="/admin/inquiries/new">
-                <MessageSquare className="h-6 w-6" />
-                <span className="text-sm">New Inquiry</span>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-20 flex-col gap-2 bg-transparent">
-              <Link href="/admin/projects/new">
-                <Wrench className="h-6 w-6" />
-                <span className="text-sm">New Project</span>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-20 flex-col gap-2 bg-transparent">
-              <Link href="/admin/customers">
-                <Users className="h-6 w-6" />
-                <span className="text-sm">Customers</span>
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="h-20 flex-col gap-2 bg-transparent">
-              <Link href="/admin/reports">
-                <TrendingUp className="h-6 w-6" />
-                <span className="text-sm">Reports</span>
-              </Link>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Quick Navigation and Actions */}
+      <QuickNavigation />
     </div>
   )
 }

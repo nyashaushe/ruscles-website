@@ -75,6 +75,29 @@ const data = {
       ],
     },
     {
+      title: "Forms",
+      url: "/admin/forms",
+      icon: FileText,
+      items: [
+        {
+          title: "All Forms",
+          url: "/admin/forms",
+        },
+        {
+          title: "New Submissions",
+          url: "/admin/forms?status=new",
+        },
+        {
+          title: "In Progress",
+          url: "/admin/forms?status=in_progress",
+        },
+        {
+          title: "Responded",
+          url: "/admin/forms?status=responded",
+        },
+      ],
+    },
+    {
       title: "Projects",
       url: "/admin/projects",
       icon: Wrench,
@@ -144,6 +167,25 @@ const data = {
       title: "Analytics",
       url: "/admin/analytics",
       icon: BarChart3,
+    },
+    {
+      title: "Reports",
+      url: "/admin/reports",
+      icon: FileText,
+      items: [
+        {
+          title: "Dashboard",
+          url: "/admin/reports",
+        },
+        {
+          title: "Data Exports",
+          url: "/admin/reports?tab=exports",
+        },
+        {
+          title: "Scheduled Reports",
+          url: "/admin/reports?tab=scheduled",
+        },
+      ],
     },
     {
       title: "Calendar",
@@ -271,9 +313,11 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                   <User2 className="mr-2 size-4" />
                   Account Settings
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Bell className="mr-2 size-4" />
-                  Notifications
+                <DropdownMenuItem asChild>
+                  <Link href="/admin/settings/notifications">
+                    <Bell className="mr-2 size-4" />
+                    Notifications
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
                   <LogOut className="mr-2 size-4" />
