@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Phone, Mail, Clock } from "lucide-react"
+import { Phone, Mail, Clock, MapPin } from "lucide-react"
 
 export function Footer() {
   return (
@@ -93,6 +93,10 @@ export function Footer() {
           <div>
             <h4 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Contact Info</h4>
             <div className="space-y-3 text-sm text-gray-400">
+              <div className="flex items-start space-x-2">
+                <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                <span>112 2nd Street Parktown Waterfalls Harare</span>
+              </div>
               <div className="flex items-start space-x-2">
                 <Phone className="h-4 w-4 mt-0.5 flex-shrink-0" />
                 <div>

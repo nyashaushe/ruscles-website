@@ -96,7 +96,7 @@ export default function SettingsPage() {
                   </Label>
                   <Textarea
                     id="address"
-                    defaultValue="123 Business Street, Harare, Zimbabwe"
+                    defaultValue="112 2nd Street Parktown Waterfalls Harare"
                     className="min-h-[80px]"
                   />
                 </div>

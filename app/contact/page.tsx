@@ -74,13 +74,13 @@ export default function ContactPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <MapPin className="mr-2 h-5 w-5 text-blue-600" />
-                    Service Areas
+                    Our Location
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600">
-                    We serve residential and commercial clients throughout the region. Contact us to confirm service
-                    availability in your area.
+                  <p className="text-gray-600 font-medium">112 2nd Street Parktown Waterfalls Harare</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    We serve residential and commercial clients throughout Harare and surrounding areas.
                   </p>
                 </CardContent>
               </Card>
