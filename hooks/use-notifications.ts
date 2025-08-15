@@ -42,7 +42,7 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
     autoMarkAsRead = false,
     enableSound = true,
     enableBrowserNotifications = true
-  } = options
+  } = options || {}
 
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
@@ -57,16 +57,20 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
   // Initialize audio for notifications
   useEffect(() => {
     if (enableSound && typeof window !== 'undefined') {
-      audioRef.current = new Audio('/sounds/notification.mp3')
-      audioRef.current.volume = 0.5
+      try {
+        audioRef.current = new Audio('/sounds/notification.mp3')
+        audioRef.current.volume = 0.5
+      } catch (error) {
+        console.warn('Failed to initialize notification audio:', error)
+      }
     }
   }, [enableSound])
 
   // Request browser notification permission
   useEffect(() => {
-    if (enableBrowserNotifications && typeof window !== 'undefined' && 'Notification' in window) {
-      if (Notification.permission === 'default') {
-        Notification.requestPermission()
+    if (enableBrowserNotifications && typeof window !== 'undefined' && 'Notification' in window && window.Notification) {
+      if (window.Notification.permission === 'default') {
+        window.Notification.requestPermission()
       }
     }
   }, [enableBrowserNotifications])
@@ -132,10 +136,10 @@ export function useNotifications(options: UseNotificationsOptions = {}): UseNoti
         }
 
         // Show browser notifications
-        if (enableBrowserNotifications && preferences.browserNotifications) {
+        if (enableBrowserNotifications && preferences.browserNotifications && typeof window !== 'undefined' && window.Notification) {
           newNotifications.forEach(notification => {
-            if (Notification.permission === 'granted') {
-              new Notification(notification.title, {
+            if (window.Notification.permission === 'granted') {
+              new window.Notification(notification.title, {
                 body: notification.message,
                 icon: '/favicon.ico',
                 tag: notification.id,
