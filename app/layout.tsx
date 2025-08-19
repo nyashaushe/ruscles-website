@@ -8,12 +8,12 @@ import { Footer } from "@/components/footer"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Ruscles Investments - Professional Electrical & HVAC Services",
+  title: "Ruscles Investments - Experts and Professionals in  Electrical & HVAC Services",
   description:
     "Expert electrical wiring, repairs, air-conditioning, cold rooms, fridges, and freezer installation and repair services. Professional, reliable, satisfaction guaranteed.",
   keywords:
     "electrical services, HVAC, air conditioning, cold rooms, electrical wiring, electrical repairs, refrigeration, freezer repair",
-    generator: 'v0.dev'
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({

@@ -7,7 +7,7 @@ export function Hero() {
     <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">Professional Electrical & HVAC Services</h1>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">Experts and Professionals in Electrical & HVAC Services</h1>
           <p className="text-xl md:text-2xl mb-8 text-blue-100">
             Expert electrical wiring, repairs, air-conditioning, and refrigeration services. Satisfaction guaranteed
             with every project.
