@@ -1,0 +1,296 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+/// @seed="node scripts/seed.js"
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // Loads from .env.local file
+}
+
+// User management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      UserRole @default(USER)
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  assignedForms     FormSubmission[] @relation("AssignedUser")
+  authoredContent  ContentItem[]
+  formResponses    FormResponse[]
+  notifications    Notification[]
+  updatedPages     PageContent[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  USER
+}
+
+// Form submissions
+model FormSubmission {
+  id          String           @id @default(cuid())
+  type        FormType
+  submittedAt DateTime         @default(now())
+  status      FormStatus       @default(NEW)
+  priority    FormPriority     @default(MEDIUM)
+  customerInfo Json            // Stores customer information as JSON
+  formData    Json             // Stores form data as JSON
+  notes       String?
+  lastUpdated DateTime         @updatedAt
+  createdAt   DateTime         @default(now())
+
+  // Relations
+  responses   FormResponse[]
+  assignedTo User?             @relation("AssignedUser", fields: [assignedToId], references: [id])
+  assignedToId String?
+  tags       String[]          // Array of tags
+
+  @@map("form_submissions")
+}
+
+enum FormType {
+  CONTACT
+  SERVICE_INQUIRY
+  QUOTE_REQUEST
+}
+
+enum FormStatus {
+  NEW
+  IN_PROGRESS
+  RESPONDED
+  COMPLETED
+  ARCHIVED
+}
+
+enum FormPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// Form responses
+model FormResponse {
+  id           String       @id @default(cuid())
+  formId       String
+  respondedBy  String
+  respondedAt  DateTime     @default(now())
+  method       ResponseMethod
+  content      String
+  attachments  String[]     // Array of file URLs
+  createdAt    DateTime     @default(now())
+
+  // Relations
+  form         FormSubmission @relation(fields: [formId], references: [id], onDelete: Cascade)
+  user         User          @relation(fields: [respondedBy], references: [id])
+
+  @@map("form_responses")
+}
+
+enum ResponseMethod {
+  EMAIL
+  PHONE
+  IN_PERSON
+}
+
+// Content management
+model ContentItem {
+  id             String        @id @default(cuid())
+  type           ContentType
+  title          String
+  slug           String        @unique
+  content        String        @db.Text
+  excerpt        String?
+  status         ContentStatus @default(DRAFT)
+  publishedAt    DateTime?
+  scheduledFor   DateTime?
+  author         String
+  tags           String[]      // Array of tags
+  categories     String[]      // Array of categories
+  featuredImage  String?
+  seoTitle       String?
+  seoDescription String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // Relations
+  user           User          @relation(fields: [author], references: [id])
+  blogPost       BlogPost?
+
+  @@map("content_items")
+}
+
+enum ContentType {
+  BLOG_POST
+  TESTIMONIAL
+  PORTFOLIO_ITEM
+  PAGE_CONTENT
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+  ARCHIVED
+}
+
+// Blog posts (extends ContentItem)
+model BlogPost {
+  id          String   @id @default(cuid())
+  contentId   String   @unique
+  readingTime Int?
+  viewCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  content     ContentItem @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@map("blog_posts")
+}
+
+// Testimonials
+model Testimonial {
+  id             String   @id @default(cuid())
+  customerName   String
+  customerTitle  String?
+  customerCompany String?
+  customerPhoto  String?
+  testimonialText String  @db.Text
+  rating         Int?
+  projectType    String?
+  isVisible      Boolean  @default(true)
+  isFeatured     Boolean  @default(false)
+  displayOrder   Int      @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("testimonials")
+}
+
+// Portfolio items
+model PortfolioItem {
+  id              String           @id @default(cuid())
+  title           String
+  description     String           @db.Text
+  serviceCategory ServiceCategory
+  images          String[]         // Array of image URLs
+  thumbnailImage  String
+  completionDate  DateTime
+  clientName      String?
+  projectValue    Float?
+  location        String?
+  tags            String[]         // Array of tags
+  isVisible       Boolean          @default(true)
+  isFeatured      Boolean          @default(false)
+  displayOrder    Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@map("portfolio_items")
+}
+
+enum ServiceCategory {
+  ELECTRICAL
+  HVAC
+  REFRIGERATION
+}
+
+// Page content
+model PageContent {
+  id             String   @id @default(cuid())
+  slug           String   @unique
+  title          String
+  content        String   @db.Text
+  metaTitle      String?
+  metaDescription String?
+  lastUpdated    DateTime @updatedAt
+  updatedBy      String
+  createdAt      DateTime @default(now())
+
+  // Relations
+  user           User     @relation(fields: [updatedBy], references: [id])
+
+  @@map("page_content")
+}
+
+// Notifications
+model Notification {
+  id       String           @id @default(cuid())
+  type     NotificationType
+  title    String
+  message  String
+  timestamp DateTime        @default(now())
+  isRead   Boolean         @default(false)
+  priority NotificationPriority @default(MEDIUM)
+  actionUrl String?
+  metadata Json?            // Stores additional metadata as JSON
+  createdAt DateTime        @default(now())
+
+  // Relations
+  userId   String
+  user     User             @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+enum NotificationType {
+  FORM_SUBMISSION
+  CONTENT_PUBLISHED
+  REMINDER
+  SYSTEM
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// Business information
+model BusinessInfo {
+  id                String   @id @default(cuid())
+  companyName       String
+  tagline           String?
+  description       String   @db.Text
+  address           String?
+  phone             String?
+  email             String?
+  website           String?
+  logo              String?
+  socialMedia       Json?    // Stores social media links as JSON
+  businessHours     Json?    // Stores business hours as JSON
+  services          Json?    // Stores service descriptions as JSON
+  updatedAt         DateTime @updatedAt
+  updatedBy         String
+
+  @@map("business_info")
+}
+
+// Settings
+model Settings {
+  id                    String   @id @default(cuid())
+  key                   String   @unique
+  value                 String   @db.Text
+  description           String?
+  isPublic             Boolean  @default(false)
+  updatedAt             DateTime @updatedAt
+  updatedBy             String
+
+  @@map("settings")
+}

@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { Save, Building2, Mail, Phone, MapPin, Globe, Bell, Shield, Database } from "lucide-react"
+import { DatabaseManagement } from "@/components/admin/database-management"
 
 export default function SettingsPage() {
   return (
@@ -378,6 +379,8 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
+
+          <DatabaseManagement />
         </TabsContent>
       </Tabs>
     </div>
