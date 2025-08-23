@@ -23,78 +23,9 @@ export default function InquiriesPage() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [serviceFilter, setServiceFilter] = useState("all")
 
-  const inquiries = [
-    {
-      id: "INQ-001",
-      name: "John Mukamuri",
-      email: "john@email.com",
-      phone: "+263 77 123 4567",
-      service: "Electrical Wiring",
-      propertyType: "Residential",
-      status: "pending",
-      priority: "high",
-      date: "2024-01-15",
-      message: "Need complete rewiring for 4-bedroom house in Borrowdale",
-      timeline: "this-month",
-      emergency: true,
-    },
-    {
-      id: "INQ-002",
-      name: "Sarah Chikwanha",
-      email: "sarah@email.com",
-      phone: "+263 77 234 5678",
-      service: "Air Conditioning",
-      propertyType: "Commercial",
-      status: "in-progress",
-      priority: "medium",
-      date: "2024-01-14",
-      message: "AC installation for restaurant in Avondale",
-      timeline: "next-week",
-      emergency: false,
-    },
-    {
-      id: "INQ-003",
-      name: "David Moyo",
-      email: "david@email.com",
-      phone: "+263 77 345 6789",
-      service: "Cold Room Installation",
-      propertyType: "Commercial",
-      status: "completed",
-      priority: "low",
-      date: "2024-01-13",
-      message: "Cold room for supermarket chain",
-      timeline: "flexible",
-      emergency: false,
-    },
-    {
-      id: "INQ-004",
-      name: "Grace Sibanda",
-      email: "grace@email.com",
-      phone: "+263 77 456 7890",
-      service: "Refrigeration Repair",
-      propertyType: "Residential",
-      status: "pending",
-      priority: "high",
-      date: "2024-01-12",
-      message: "Freezer not working properly, urgent repair needed",
-      timeline: "asap",
-      emergency: true,
-    },
-    {
-      id: "INQ-005",
-      name: "Michael Choto",
-      email: "michael@email.com",
-      phone: "+263 77 567 8901",
-      service: "Electrical Repairs",
-      propertyType: "Industrial",
-      status: "in-progress",
-      priority: "medium",
-      date: "2024-01-11",
-      message: "Electrical fault in factory production line",
-      timeline: "this-week",
-      emergency: false,
-    },
-  ]
+  // Inquiries are now handled through the forms system
+  // This page will be updated to show legacy inquiries or redirect to forms
+  const inquiries: any[] = []
 
   const getStatusColor = (status: string) => {
     switch (status) {

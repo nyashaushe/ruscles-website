@@ -55,33 +55,9 @@ export function SpamDetectionDashboard() {
         setStats(statsResponse.data)
       }
 
-      // Mock flagged submissions for demo
-      setFlaggedSubmissions([
-        {
-          id: '1',
-          formType: 'contact',
-          submittedAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-          spamScore: 85,
-          reasons: ['Contains suspicious keywords: casino, free money', 'Too many links'],
-          status: 'pending',
-          customerInfo: {
-            name: 'John Doe',
-            email: 'john@tempmail.org'
-          }
-        },
-        {
-          id: '2',
-          formType: 'service_inquiry',
-          submittedAt: new Date(Date.now() - 4 * 60 * 60 * 1000),
-          spamScore: 72,
-          reasons: ['Honeypot field was filled', 'Form submitted too quickly'],
-          status: 'pending',
-          customerInfo: {
-            name: 'Jane Smith',
-            email: 'jane@example.com'
-          }
-        }
-      ])
+      // Flagged submissions will be fetched from the database
+      // This will be implemented when spam detection is added
+      setFlaggedSubmissions([])
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load spam data')
     } finally {
@@ -239,10 +215,10 @@ export function SpamDetectionDashboard() {
                                   {submission.spamScore}% spam
                                 </Badge>
                               </div>
-                              
+
                               <h4 className="font-medium">{submission.customerInfo.name}</h4>
                               <p className="text-sm text-gray-600">{submission.customerInfo.email}</p>
-                              
+
                               <div className="mt-2">
                                 <p className="text-xs text-gray-500 mb-1">Spam indicators:</p>
                                 <ul className="text-xs text-red-600 space-y-1">
@@ -251,17 +227,17 @@ export function SpamDetectionDashboard() {
                                   ))}
                                 </ul>
                               </div>
-                              
+
                               <p className="text-xs text-gray-500 mt-2">
                                 {formatDistanceToNow(submission.submittedAt, { addSuffix: true })}
                               </p>
                             </div>
-                            
+
                             <div className="flex flex-col space-y-2 ml-4">
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => {/* View details */}}
+                                onClick={() => {/* View details */ }}
                               >
                                 <Eye className="h-4 w-4 mr-1" />
                                 View
@@ -287,7 +263,7 @@ export function SpamDetectionDashboard() {
                         </CardContent>
                       </Card>
                     ))}
-                  
+
                   {flaggedSubmissions.filter(s => s.status === 'pending').length === 0 && (
                     <div className="text-center py-8 text-gray-500">
                       <CheckCircle className="h-8 w-8 mx-auto mb-2" />

@@ -23,83 +23,9 @@ export default function ProjectsPage() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [typeFilter, setTypeFilter] = useState("all")
 
-  const projects = [
-    {
-      id: "PROJ-001",
-      title: "Commercial Cold Room Installation",
-      customer: "Fresh Foods Supermarket",
-      type: "Commercial Refrigeration",
-      status: "in-progress",
-      progress: 75,
-      startDate: "2024-01-01",
-      endDate: "2024-02-15",
-      budget: 25000,
-      spent: 18750,
-      location: "CBD, Harare",
-      priority: "high",
-      team: "Team A",
-    },
-    {
-      id: "PROJ-002",
-      title: "Residential Electrical Rewiring",
-      customer: "John Mukamuri",
-      type: "Electrical",
-      status: "completed",
-      progress: 100,
-      startDate: "2023-12-15",
-      endDate: "2024-01-10",
-      budget: 4500,
-      spent: 4200,
-      location: "Borrowdale, Harare",
-      priority: "medium",
-      team: "Team B",
-    },
-    {
-      id: "PROJ-003",
-      title: "Restaurant HVAC System Upgrade",
-      customer: "Bella Vista Restaurant",
-      type: "HVAC",
-      status: "in-progress",
-      progress: 45,
-      startDate: "2024-01-10",
-      endDate: "2024-02-28",
-      budget: 12000,
-      spent: 5400,
-      location: "Avondale, Harare",
-      priority: "medium",
-      team: "Team C",
-    },
-    {
-      id: "PROJ-004",
-      title: "Industrial Freezer Installation",
-      customer: "Ice Cream Manufacturing Co.",
-      type: "Industrial Refrigeration",
-      status: "planning",
-      progress: 15,
-      startDate: "2024-02-01",
-      endDate: "2024-03-15",
-      budget: 35000,
-      spent: 5250,
-      location: "Industrial Area, Harare",
-      priority: "high",
-      team: "Team A",
-    },
-    {
-      id: "PROJ-005",
-      title: "Office Building Maintenance Contract",
-      customer: "Corporate Plaza",
-      type: "Maintenance",
-      status: "active",
-      progress: 60,
-      startDate: "2023-01-01",
-      endDate: "2024-12-31",
-      budget: 50000,
-      spent: 30000,
-      location: "CBD, Harare",
-      priority: "low",
-      team: "Team D",
-    },
-  ]
+  // Projects data will be fetched from the database
+  // This will be implemented when project management is added
+  const projects: any[] = []
 
   const getStatusColor = (status: string) => {
     switch (status) {

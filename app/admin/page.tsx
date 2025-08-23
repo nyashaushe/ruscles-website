@@ -42,68 +42,10 @@ export default function AdminDashboard() {
     },
   ]
 
-  const recentInquiries = [
-    {
-      id: "INQ-001",
-      name: "John Mukamuri",
-      email: "john@email.com",
-      service: "Electrical Wiring",
-      status: "pending",
-      date: "2024-01-15",
-      priority: "high",
-    },
-    {
-      id: "INQ-002",
-      name: "Sarah Chikwanha",
-      email: "sarah@email.com",
-      service: "Air Conditioning",
-      status: "in-progress",
-      date: "2024-01-14",
-      priority: "medium",
-    },
-    {
-      id: "INQ-003",
-      name: "David Moyo",
-      email: "david@email.com",
-      service: "Cold Room Installation",
-      status: "completed",
-      date: "2024-01-13",
-      priority: "low",
-    },
-    {
-      id: "INQ-004",
-      name: "Grace Sibanda",
-      email: "grace@email.com",
-      service: "Refrigeration Repair",
-      status: "pending",
-      date: "2024-01-12",
-      priority: "high",
-    },
-  ]
-
-  const upcomingTasks = [
-    {
-      id: 1,
-      title: "Follow up with John Mukamuri",
-      type: "call",
-      time: "10:00 AM",
-      priority: "high",
-    },
-    {
-      id: 2,
-      title: "Site visit - Borrowdale project",
-      type: "visit",
-      time: "2:00 PM",
-      priority: "medium",
-    },
-    {
-      id: 3,
-      title: "Send quote to Sarah Chikwanha",
-      type: "email",
-      time: "4:00 PM",
-      priority: "high",
-    },
-  ]
+  // Recent inquiries and tasks are now fetched from the database
+  // These will be populated by the activity feed and task management system
+  const recentInquiries: any[] = []
+  const upcomingTasks: any[] = []
 
   const getStatusColor = (status: string) => {
     switch (status) {

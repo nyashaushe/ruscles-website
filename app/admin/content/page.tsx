@@ -34,95 +34,11 @@ export default function ContentPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
 
-  const blogPosts = [
-    {
-      id: "BLOG-001",
-      title: "Essential Electrical Safety Tips for Homeowners in 2024",
-      author: "Technical Team",
-      status: "published",
-      publishDate: "2024-01-15",
-      views: 1250,
-      category: "Safety",
-    },
-    {
-      id: "BLOG-002",
-      title: "How to Choose the Right Air Conditioning System",
-      author: "HVAC Specialists",
-      status: "draft",
-      publishDate: null,
-      views: 0,
-      category: "HVAC",
-    },
-    {
-      id: "BLOG-003",
-      title: "Signs Your Electrical Panel Needs an Upgrade",
-      author: "Electrical Team",
-      status: "published",
-      publishDate: "2024-01-10",
-      views: 890,
-      category: "Electrical",
-    },
-  ]
-
-  const testimonials = [
-    {
-      id: "TEST-001",
-      customer: "John Mukamuri",
-      rating: 5,
-      content: "Excellent service! The team was professional and completed the rewiring project on time.",
-      status: "approved",
-      date: "2024-01-12",
-      project: "Residential Rewiring",
-    },
-    {
-      id: "TEST-002",
-      customer: "Fresh Foods Supermarket",
-      rating: 5,
-      content: "Outstanding cold room installation. Very satisfied with the energy efficiency improvements.",
-      status: "pending",
-      date: "2024-01-10",
-      project: "Cold Room Installation",
-    },
-    {
-      id: "TEST-003",
-      customer: "Bella Vista Restaurant",
-      rating: 4,
-      content: "Great HVAC upgrade. Kitchen conditions improved significantly.",
-      status: "approved",
-      date: "2024-01-08",
-      project: "HVAC System Upgrade",
-    },
-  ]
-
-  const portfolioItems = [
-    {
-      id: "PORT-001",
-      title: "Commercial Cold Room Installation",
-      client: "Fresh Foods Supermarket",
-      category: "Commercial Refrigeration",
-      status: "published",
-      featured: true,
-      date: "2024-01-15",
-    },
-    {
-      id: "PORT-002",
-      title: "Residential Electrical Rewiring",
-      client: "The Johnson Family",
-      category: "Residential Electrical",
-      status: "published",
-      featured: false,
-      date: "2024-01-10",
-    },
-    {
-      id: "PORT-003",
-      title: "Restaurant HVAC System Upgrade",
-      client: "Bella Vista Restaurant",
-      category: "Commercial HVAC",
-      status: "draft",
-      featured: false,
-      date: null,
-    },
-  ]
+  // Content data will be fetched from the database
+  // This will be implemented when content management is added
+  const blogPosts: any[] = []
+  const testimonials: any[] = []
+  const portfolioItems: any[] = []
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -152,8 +68,8 @@ export default function ContentPage() {
       {/* Content Tabs */}
       <Tabs defaultValue="blog" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger 
-            value="blog" 
+          <TabsTrigger
+            value="blog"
             className="flex items-center gap-2"
             onClick={() => router.push("/admin/content/blog")}
           >
@@ -168,8 +84,8 @@ export default function ContentPage() {
             <ImageIcon className="h-4 w-4" />
             Portfolio
           </TabsTrigger>
-          <TabsTrigger 
-            value="pages" 
+          <TabsTrigger
+            value="pages"
             className="flex items-center gap-2"
             onClick={() => router.push("/admin/content/pages")}
           >

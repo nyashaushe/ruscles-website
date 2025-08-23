@@ -21,73 +21,9 @@ export default function CustomersPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [typeFilter, setTypeFilter] = useState("all")
 
-  const customers = [
-    {
-      id: "CUST-001",
-      name: "John Mukamuri",
-      email: "john@email.com",
-      phone: "+263 77 123 4567",
-      type: "Residential",
-      location: "Borrowdale, Harare",
-      totalProjects: 3,
-      totalSpent: 4500,
-      lastProject: "2024-01-15",
-      status: "Active",
-      joinDate: "2023-06-15",
-    },
-    {
-      id: "CUST-002",
-      name: "Fresh Foods Supermarket",
-      email: "manager@freshfoods.co.zw",
-      phone: "+263 77 234 5678",
-      type: "Commercial",
-      location: "CBD, Harare",
-      totalProjects: 8,
-      totalSpent: 25000,
-      lastProject: "2024-01-10",
-      status: "Active",
-      joinDate: "2022-03-20",
-    },
-    {
-      id: "CUST-003",
-      name: "Bella Vista Restaurant",
-      email: "info@bellavista.co.zw",
-      phone: "+263 77 345 6789",
-      type: "Commercial",
-      location: "Avondale, Harare",
-      totalProjects: 5,
-      totalSpent: 12000,
-      lastProject: "2024-01-08",
-      status: "Active",
-      joinDate: "2023-01-10",
-    },
-    {
-      id: "CUST-004",
-      name: "Sarah Chikwanha",
-      email: "sarah@email.com",
-      phone: "+263 77 456 7890",
-      type: "Residential",
-      location: "Mount Pleasant, Harare",
-      totalProjects: 2,
-      totalSpent: 3200,
-      lastProject: "2023-12-20",
-      status: "Inactive",
-      joinDate: "2023-08-05",
-    },
-    {
-      id: "CUST-005",
-      name: "Industrial Manufacturing Co.",
-      email: "procurement@industrial.co.zw",
-      phone: "+263 77 567 8901",
-      type: "Industrial",
-      location: "Industrial Area, Harare",
-      totalProjects: 12,
-      totalSpent: 45000,
-      lastProject: "2024-01-12",
-      status: "Active",
-      joinDate: "2021-11-30",
-    },
-  ]
+  // Customers data will be fetched from the database
+  // This will be implemented when customer management is added
+  const customers: any[] = []
 
   const getStatusColor = (status: string) => {
     switch (status) {

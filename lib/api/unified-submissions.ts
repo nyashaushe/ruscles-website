@@ -58,19 +58,16 @@ export class UnifiedSubmissionsApi {
         }
 
         const formsResponse = await FormsApi.getFormSubmissions(formFilters, page, limit)
-        
+
         if (formsResponse.success) {
           const formSubmissions = formsResponse.data.map(form => this.convertFormToUnified(form))
           submissions.push(...formSubmissions)
         }
       }
 
-      // Fetch inquiries if not filtered out (mock data for now)
-      if (!filters?.type || filters.type.includes('inquiry')) {
-        const mockInquiries = this.getMockInquiries()
-        const inquirySubmissions = mockInquiries.map(inquiry => this.convertInquiryToUnified(inquiry))
-        submissions.push(...inquirySubmissions)
-      }
+      // Note: Inquiries are now handled through the forms system
+      // Legacy inquiries can be migrated to the new forms system
+      // For now, we only return forms data
 
       // Apply additional filtering
       let filteredSubmissions = submissions
@@ -140,38 +137,33 @@ export class UnifiedSubmissionsApi {
         FormsApi.getFormStats()
       ])
 
-      // Mock inquiry stats
-      const inquiryStats = {
-        total: 24,
-        byStatus: { pending: 8, 'in-progress': 12, completed: 4 },
-        byPriority: { high: 6, medium: 12, low: 6 }
-      }
-
       const formStats = formsResponse.success ? formsResponse.data : {
         total: 0,
         byStatus: {},
-        byPriority: {}
+        byPriority: {},
+        recentCount: 0
       }
 
+      // All submissions are now forms - inquiries have been migrated
       return {
-        total: formStats.total + inquiryStats.total,
+        total: formStats.total,
         byType: {
           form: formStats.total,
-          inquiry: inquiryStats.total
+          inquiry: 0 // Legacy inquiries migrated to forms
         },
         byStatus: {
           new: formStats.byStatus?.new || 0,
-          pending: inquiryStats.byStatus.pending,
-          in_progress: (formStats.byStatus?.in_progress || 0) + inquiryStats.byStatus['in-progress'],
+          pending: 0, // Legacy status
+          in_progress: formStats.byStatus?.in_progress || 0,
           responded: formStats.byStatus?.responded || 0,
-          completed: (formStats.byStatus?.completed || 0) + inquiryStats.byStatus.completed,
+          completed: formStats.byStatus?.completed || 0,
           archived: formStats.byStatus?.archived || 0
         },
         byPriority: {
           urgent: formStats.byPriority?.urgent || 0,
-          high: (formStats.byPriority?.high || 0) + inquiryStats.byPriority.high,
-          medium: (formStats.byPriority?.medium || 0) + inquiryStats.byPriority.medium,
-          low: (formStats.byPriority?.low || 0) + inquiryStats.byPriority.low
+          high: formStats.byPriority?.high || 0,
+          medium: formStats.byPriority?.medium || 0,
+          low: formStats.byPriority?.low || 0
         },
         recentCount: formStats.recentCount || 0
       }
@@ -202,82 +194,5 @@ export class UnifiedSubmissionsApi {
         originalType: form.type
       }
     }
-  }
-
-  private static convertInquiryToUnified(inquiry: any): UnifiedSubmission {
-    return {
-      id: inquiry.id,
-      type: 'inquiry',
-      source: 'manual_inquiry',
-      customerInfo: {
-        name: inquiry.name,
-        email: inquiry.email,
-        phone: inquiry.phone,
-        company: inquiry.company
-      },
-      subject: inquiry.service,
-      description: inquiry.message || 'Manual inquiry entry',
-      status: inquiry.status === 'in-progress' ? 'in_progress' : inquiry.status,
-      priority: inquiry.priority,
-      submittedAt: new Date(inquiry.date),
-      lastUpdated: new Date(inquiry.date),
-      assignedTo: inquiry.assignedTo,
-      tags: inquiry.tags || [],
-      notes: inquiry.notes || '',
-      responses: inquiry.responses || [],
-      metadata: {
-        propertyType: inquiry.propertyType,
-        timeline: inquiry.timeline,
-        emergency: inquiry.emergency,
-        originalService: inquiry.service
-      }
-    }
-  }
-
-  private static getMockInquiries() {
-    return [
-      {
-        id: "INQ-001",
-        name: "John Mukamuri",
-        email: "john@email.com",
-        phone: "+263 77 123 4567",
-        service: "Electrical Wiring",
-        propertyType: "Residential",
-        status: "pending",
-        priority: "high",
-        date: "2024-01-15",
-        message: "Need complete rewiring for 4-bedroom house in Borrowdale",
-        timeline: "this-month",
-        emergency: true,
-      },
-      {
-        id: "INQ-002",
-        name: "Sarah Chikwanha",
-        email: "sarah@email.com",
-        phone: "+263 77 234 5678",
-        service: "Air Conditioning",
-        propertyType: "Commercial",
-        status: "in-progress",
-        priority: "medium",
-        date: "2024-01-14",
-        message: "AC installation for restaurant in Avondale",
-        timeline: "next-week",
-        emergency: false,
-      },
-      {
-        id: "INQ-003",
-        name: "David Moyo",
-        email: "david@email.com",
-        phone: "+263 77 345 6789",
-        service: "Cold Room Installation",
-        propertyType: "Commercial",
-        status: "completed",
-        priority: "low",
-        date: "2024-01-13",
-        message: "Cold room for supermarket chain",
-        timeline: "flexible",
-        emergency: false,
-      }
-    ]
   }
 }
