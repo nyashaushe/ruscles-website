@@ -20,7 +20,7 @@ export default function AdminDashboard() {
       trend: "up",
       icon: MessageSquare,
       description: "Forms & Inquiries",
-      href: "/admin/inquiries"
+      href: "/admin/forms"
     },
     {
       title: "Pending Items",
@@ -38,14 +38,12 @@ export default function AdminDashboard() {
       trend: "up",
       icon: Wrench,
       description: "In progress",
-      href: "/admin/inquiries?status=in-progress"
+      href: "/admin/forms?status=in_progress"
     },
   ]
 
-  // Recent inquiries and tasks are now fetched from the database
-  // These will be populated by the activity feed and task management system
-  const recentInquiries: any[] = []
-  const upcomingTasks: any[] = []
+  // Activity feed and tasks are now handled by dedicated components
+  // that fetch real data from the database
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -119,12 +117,12 @@ export default function AdminDashboard() {
                 <div>
                   <CardTitle className="flex items-center gap-2">
                     <MessageSquare className="h-5 w-5" />
-                    Inquiries Overview
+                    Legacy Inquiries
                   </CardTitle>
-                  <CardDescription>Traditional inquiry management</CardDescription>
+                  <CardDescription>Traditional inquiry data (now part of forms)</CardDescription>
                 </div>
                 <Button asChild size="sm">
-                  <Link href="/admin/inquiries">View All</Link>
+                  <Link href="/admin/forms">View in Forms</Link>
                 </Button>
               </div>
             </CardHeader>
@@ -201,26 +199,10 @@ export default function AdminDashboard() {
             <CardDescription>Your schedule for today</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {upcomingTasks.map((task) => (
-                <div key={task.id} className="flex items-start gap-3 p-3 border rounded-lg">
-                  <div className="mt-1">
-                    {task.type === "call" && <Phone className="h-4 w-4 text-blue-500" />}
-                    {task.type === "visit" && <Users className="h-4 w-4 text-green-500" />}
-                    {task.type === "email" && <Mail className="h-4 w-4 text-orange-500" />}
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-gray-900">{task.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <Clock className="h-3 w-3 text-gray-400" />
-                      <span className="text-xs text-gray-500">{task.time}</span>
-                      <Badge variant="outline" className={getPriorityColor(task.priority)} size="sm">
-                        {task.priority}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-              ))}
+            <div className="text-center py-8 text-gray-500">
+              <Calendar className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+              <p className="text-sm">Task management coming soon</p>
+              <p className="text-xs">This will integrate with your calendar and project deadlines</p>
             </div>
             <Button variant="outline" className="w-full mt-4 bg-transparent" size="sm">
               View Full Schedule

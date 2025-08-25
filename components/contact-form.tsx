@@ -12,17 +12,22 @@ import { submitContactForm } from "@/actions/contact"
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (formData: FormData) => {
     setIsSubmitting(true)
+    setError(null)
 
     try {
       const result = await submitContactForm(formData)
       if (result.success) {
         setSubmitted(true)
+      } else {
+        setError(result.message || "Something went wrong. Please try again.")
       }
     } catch (error) {
       console.error("Form submission error:", error)
+      setError("Something went wrong. Please try again.")
     } finally {
       setIsSubmitting(false)
     }
@@ -42,14 +47,20 @@ export function ContactForm() {
   }
 
   return (
-    <form action={handleSubmit} className="space-y-4 md:space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="firstName" className="text-sm md:text-base">
-            First Name *
-          </Label>
-          <Input id="firstName" name="firstName" required className="mt-1" />
+    <div>
+      {error && (
+        <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+          <p className="text-red-700 text-sm md:text-base">{error}</p>
         </div>
+      )}
+      <form action={handleSubmit} className="space-y-4 md:space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="firstName" className="text-sm md:text-base">
+              First Name *
+            </Label>
+            <Input id="firstName" name="firstName" required className="mt-1" />
+          </div>
         <div>
           <Label htmlFor="lastName" className="text-sm md:text-base">
             Last Name *
@@ -159,9 +170,10 @@ export function ContactForm() {
         {isSubmitting ? "Sending..." : "Send Message & Get Quote"}
       </Button>
 
-      <p className="text-xs md:text-sm text-gray-500 text-center leading-relaxed">
-        * Required fields. We'll respond within 24 hours with a detailed quote.
-      </p>
-    </form>
+        <p className="text-xs md:text-sm text-gray-500 text-center leading-relaxed">
+          * Required fields. We'll respond within 24 hours with a detailed quote.
+        </p>
+      </form>
+    </div>
   )
 }

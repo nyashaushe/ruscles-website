@@ -131,18 +131,8 @@ export default function FormsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Form Submissions</h1>
-          <p className="text-gray-600 mt-2">Manage and respond to customer inquiries</p>
-          <div className="flex items-center gap-2 mt-2">
-            <span className="text-sm text-gray-500">Also check:</span>
-            <Button asChild variant="outline" size="sm">
-              <Link href="/admin/inquiries">
-                <MessageSquare className="h-4 w-4 mr-2" />
-                Traditional Inquiries
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-          </div>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Form Submissions & Inquiries</h1>
+          <p className="text-gray-600 mt-2">Manage and respond to all customer inquiries and form submissions</p>
         </div>
         <div className="flex items-center gap-2">
           <Button

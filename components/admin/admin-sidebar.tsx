@@ -38,7 +38,26 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 
-const data = {
+type NavItem = {
+  title: string
+  url: string
+  icon: React.ComponentType<any>
+  badge?: string
+  items?: {
+    title: string
+    url: string
+  }[]
+}
+
+const data: {
+  user: {
+    name: string
+    email: string
+    avatar: string
+  }
+  navMain: NavItem[]
+  navSecondary: NavItem[]
+} = {
   user: {
     name: "Admin User",
     email: "admin@rusclesinvestments.com",
@@ -51,36 +70,12 @@ const data = {
       icon: Home,
     },
     {
-      title: "Inquiries",
-      url: "/admin/inquiries",
-      icon: MessageSquare,
-      badge: "12",
-      items: [
-        {
-          title: "All Inquiries",
-          url: "/admin/inquiries",
-        },
-        {
-          title: "Pending",
-          url: "/admin/inquiries?status=pending",
-        },
-        {
-          title: "In Progress",
-          url: "/admin/inquiries?status=in-progress",
-        },
-        {
-          title: "Completed",
-          url: "/admin/inquiries?status=completed",
-        },
-      ],
-    },
-    {
-      title: "Forms",
+      title: "Forms & Inquiries",
       url: "/admin/forms",
-      icon: FileText,
+      icon: MessageSquare,
       items: [
         {
-          title: "All Forms",
+          title: "All Submissions",
           url: "/admin/forms",
         },
         {
@@ -92,7 +87,7 @@ const data = {
           url: "/admin/forms?status=in_progress",
         },
         {
-          title: "Responded",
+          title: "Completed",
           url: "/admin/forms?status=responded",
         },
       ],

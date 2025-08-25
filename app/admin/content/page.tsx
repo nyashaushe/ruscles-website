@@ -29,16 +29,21 @@ import {
   Calendar,
   User,
 } from "lucide-react"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { EmptyState } from "@/components/ui/empty-state"
+import { useBlog } from "@/hooks/use-blog"
+import { useTestimonials } from "@/hooks/use-testimonials-new"
+import { usePortfolio } from "@/hooks/use-portfolio-new"
+import { formatDate } from "@/lib/utils/date"
 
 export default function ContentPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
 
-  // Content data will be fetched from the database
-  // This will be implemented when content management is added
-  const blogPosts: any[] = []
-  const testimonials: any[] = []
-  const portfolioItems: any[] = []
+  // Use real data from hooks
+  const { blogPosts, loading: blogLoading, error: blogError } = useBlog()
+  const { testimonials, loading: testimonialsLoading, error: testimonialsError } = useTestimonials()
+  const { portfolioItems, loading: portfolioLoading, error: portfolioError } = usePortfolio()
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -116,76 +121,100 @@ export default function ContentPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Blog Posts ({blogPosts.length})</CardTitle>
+              <CardTitle>Blog Posts ({blogLoading ? '...' : blogPosts?.length || 0})</CardTitle>
               <CardDescription>Manage your blog content and articles</CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Author</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Views</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {blogPosts.map((post) => (
-                    <TableRow key={post.id}>
-                      <TableCell>
-                        <div className="font-medium text-gray-900 max-w-xs truncate">{post.title}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <User className="h-4 w-4 text-gray-400" />
-                          {post.author}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{post.category}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(post.status)}>{post.status}</Badge>
-                      </TableCell>
-                      <TableCell>{post.views.toLocaleString()}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm text-gray-600">
-                          <Calendar className="h-3 w-3" />
-                          {post.publishDate || "Not published"}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>
-                              <Eye className="mr-2 h-4 w-4" />
-                              Preview
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-red-600">
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+              {blogLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <LoadingSpinner size="lg" />
+                </div>
+              ) : blogError ? (
+                <EmptyState
+                  title="Error loading blog posts"
+                  description={blogError}
+                  action={{
+                    label: "Try Again",
+                    onClick: () => window.location.reload()
+                  }}
+                />
+              ) : !blogPosts || blogPosts.length === 0 ? (
+                <EmptyState
+                  title="No blog posts found"
+                  description="Get started by creating your first blog post."
+                  action={{
+                    label: "Create Blog Post",
+                    onClick: () => router.push("/admin/content/blog/new")
+                  }}
+                />
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Author</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Views</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {blogPosts.map((post: any) => (
+                      <TableRow key={post.id}>
+                        <TableCell>
+                          <div className="font-medium text-gray-900 max-w-xs truncate">{post.title}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <User className="h-4 w-4 text-gray-400" />
+                            {post.author?.name || 'Unknown'}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{post.category || 'Uncategorized'}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={getStatusColor(post.status)}>{post.status}</Badge>
+                        </TableCell>
+                        <TableCell>{post.views ? post.views.toLocaleString() : '0'}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1 text-sm text-gray-600">
+                            <Calendar className="h-3 w-3" />
+                            {post.publishedAt ? formatDate(post.publishedAt) : "Not published"}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem onClick={() => router.push(`/admin/content/blog/${post.id}`)}>    
+                                <Eye className="mr-2 h-4 w-4" />
+                                Preview
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => router.push(`/admin/content/blog/${post.id}/edit`)}>
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="text-red-600">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -207,79 +236,104 @@ export default function ContentPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Testimonials ({testimonials.length})</CardTitle>
+              <CardTitle>Testimonials ({testimonialsLoading ? '...' : testimonials?.length || 0})</CardTitle>
               <CardDescription>Customer reviews and feedback</CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Customer</TableHead>
-                    <TableHead>Rating</TableHead>
-                    <TableHead>Content</TableHead>
-                    <TableHead>Project</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {testimonials.map((testimonial) => (
-                    <TableRow key={testimonial.id}>
-                      <TableCell>
-                        <div className="font-medium text-gray-900">{testimonial.customer}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1">
-                          {"★".repeat(testimonial.rating)}
-                          <span className="text-sm text-gray-500 ml-1">({testimonial.rating}/5)</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="max-w-xs truncate text-sm text-gray-600">{testimonial.content}</div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{testimonial.project}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(testimonial.status)}>{testimonial.status}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm text-gray-600">
-                          <Calendar className="h-3 w-3" />
-                          {testimonial.date}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>
-                              <Eye className="mr-2 h-4 w-4" />
-                              View Full
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            {testimonial.status === "pending" && <DropdownMenuItem>Approve</DropdownMenuItem>}
-                            <DropdownMenuItem className="text-red-600">
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+              {testimonialsLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <LoadingSpinner size="lg" />
+                </div>
+              ) : testimonialsError ? (
+                <EmptyState
+                  title="Error loading testimonials"
+                  description={testimonialsError}
+                  action={{
+                    label: "Try Again",
+                    onClick: () => window.location.reload()
+                  }}
+                />
+              ) : !testimonials || testimonials.length === 0 ? (
+                <EmptyState
+                  title="No testimonials found"
+                  description="Start collecting customer feedback and testimonials."
+                  action={{
+                    label: "Add Testimonial",
+                    onClick: () => router.push("/admin/content/testimonials/new")
+                  }}
+                />
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Customer</TableHead>
+                      <TableHead>Rating</TableHead>
+                      <TableHead>Content</TableHead>
+                      <TableHead>Project</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {testimonials.map((testimonial) => (
+                      <TableRow key={testimonial.id}>
+                        <TableCell>
+                          <div className="font-medium text-gray-900">{testimonial.customerName}</div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            {"★".repeat(testimonial.rating || 0)}
+                            <span className="text-sm text-gray-500 ml-1">({testimonial.rating || 0}/5)</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="max-w-xs truncate text-sm text-gray-600">{testimonial.testimonialText}</div>
+                        </TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{testimonial.projectType || 'General'}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={testimonial.isVisible ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                            {testimonial.isVisible ? 'Published' : 'Hidden'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1 text-sm text-gray-600">
+                            <Calendar className="h-3 w-3" />
+                            {formatDate(testimonial.createdAt)}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem onClick={() => router.push(`/admin/content/testimonials/${testimonial.id}`)}>
+                                <Eye className="mr-2 h-4 w-4" />
+                                View Full
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => router.push(`/admin/content/testimonials/${testimonial.id}/edit`)}>
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="text-red-600">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
@@ -301,80 +355,103 @@ export default function ContentPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Portfolio Items ({portfolioItems.length})</CardTitle>
+              <CardTitle>Portfolio Items ({portfolioLoading ? '...' : portfolioItems?.length || 0})</CardTitle>
               <CardDescription>Showcase your completed projects</CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Project</TableHead>
-                    <TableHead>Client</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Featured</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {portfolioItems.map((item) => (
-                    <TableRow key={item.id}>
-                      <TableCell>
-                        <div className="font-medium text-gray-900 max-w-xs truncate">{item.title}</div>
-                      </TableCell>
-                      <TableCell>{item.client}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{item.category}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge className={getStatusColor(item.status)}>{item.status}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        {item.featured ? (
-                          <Badge className="bg-blue-100 text-blue-800 border-blue-200">Featured</Badge>
-                        ) : (
-                          <span className="text-gray-400">-</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-1 text-sm text-gray-600">
-                          <Calendar className="h-3 w-3" />
-                          {item.date || "Not published"}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuItem>
-                              <Eye className="mr-2 h-4 w-4" />
-                              Preview
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                              <Edit className="mr-2 h-4 w-4" />
-                              Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                              {item.featured ? "Remove from Featured" : "Mark as Featured"}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-600">
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+              {portfolioLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <LoadingSpinner size="lg" />
+                </div>
+              ) : portfolioError ? (
+                <EmptyState
+                  title="Error loading portfolio items"
+                  description={portfolioError}
+                  action={{
+                    label: "Try Again",
+                    onClick: () => window.location.reload()
+                  }}
+                />
+              ) : !portfolioItems || portfolioItems.length === 0 ? (
+                <EmptyState
+                  title="No portfolio items found"
+                  description="Start showcasing your work by adding portfolio items."
+                  action={{
+                    label: "Add Portfolio Item",
+                    onClick: () => router.push("/admin/content/portfolio/new")
+                  }}
+                />
+              ) : (
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Project</TableHead>
+                      <TableHead>Client</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Featured</TableHead>
+                      <TableHead>Date</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {portfolioItems.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell>
+                          <div className="font-medium text-gray-900 max-w-xs truncate">{item.title}</div>
+                        </TableCell>
+                        <TableCell>{item.clientName || 'Not specified'}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{item.serviceCategory || 'General'}</Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge className={item.isVisible ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}>
+                            {item.isVisible ? 'Visible' : 'Hidden'}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          {item.isFeatured ? (
+                            <Badge className="bg-blue-100 text-blue-800 border-blue-200">Featured</Badge>
+                          ) : (
+                            <span className="text-gray-400">-</span>
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-1 text-sm text-gray-600">
+                            <Calendar className="h-3 w-3" />
+                            {item.completionDate ? formatDate(item.completionDate) : "Not specified"}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuItem onClick={() => router.push(`/admin/content/portfolio/${item.id}`)}>
+                                <Eye className="mr-2 h-4 w-4" />
+                                Preview
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => router.push(`/admin/content/portfolio/${item.id}/edit`)}>
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem className="text-red-600">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
             </CardContent>
           </Card>
         </TabsContent>
