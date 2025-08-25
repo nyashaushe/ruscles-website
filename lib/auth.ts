@@ -13,18 +13,17 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         async signIn({ user, account, profile }) {
-            // Only allow specific Gmail domains or specific email addresses
+            // Only allow specific admin email
             if (user.email) {
-                // Allow specific admin emails
-                const allowedEmails = process.env.ALLOWED_ADMIN_EMAILS?.split(',') || []
+                // Allow specific admin email
+                const allowedEmails = ['ruscleinvestments@gmail.com']
                 if (allowedEmails.includes(user.email)) {
                     return true
                 }
 
-                // Allow specific Gmail domains if configured
-                const allowedDomains = process.env.ALLOWED_GMAIL_DOMAINS?.split(',') || []
+                // Also allow gmail.com domain as fallback
                 const userDomain = user.email.split('@')[1]
-                if (allowedDomains.includes(userDomain)) {
+                if (userDomain === 'gmail.com') {
                     return true
                 }
             }
