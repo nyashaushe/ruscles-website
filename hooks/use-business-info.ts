@@ -1,69 +1,119 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { businessInfoApi } from "@/lib/api/business-info"
+import { useState, useEffect, useCallback } from 'react'
 
-interface BusinessHours {
-  day: string
-  isOpen: boolean
-  openTime: string
-  closeTime: string
+export interface BusinessInfo {
+  id: string
+  companyName: string
+  tagline?: string
+  description?: string
+  address?: string
+  phone?: string
+  email?: string
+  website?: string
+  logo?: string
+  socialMedia: {
+    facebook?: string
+    twitter?: string
+    instagram?: string
+    linkedin?: string
+    youtube?: string
+  }
+  businessHours: {
+    monday?: string
+    tuesday?: string
+    wednesday?: string
+    thursday?: string
+    friday?: string
+    saturday?: string
+    sunday?: string
+  }
+  services: {
+    electrical?: string
+    hvac?: string
+    refrigeration?: string
+    maintenance?: string
+  }
+  updatedAt: string
+  updatedBy: string
 }
 
-interface BusinessInfo {
-  companyName: string
-  address: {
-    street: string
-    city: string
-    state: string
-    zipCode: string
-  }
-  phone: string
-  email: string
-  emergencyPhone?: string
-  businessHours: BusinessHours[]
-  serviceAreas: string[]
-  description: string
+export interface BusinessInfoResponse {
+  businessInfo: BusinessInfo | null
 }
 
 export function useBusinessInfo() {
   const [businessInfo, setBusinessInfo] = useState<BusinessInfo | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<Error | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const fetchBusinessInfo = async () => {
+  // Fetch business info
+  const fetchBusinessInfo = useCallback(async () => {
+    setLoading(true)
+    setError(null)
+
     try {
-      setIsLoading(true)
-      setError(null)
-      const data = await businessInfoApi.get()
-      setBusinessInfo(data)
+      const response = await fetch('/api/business-info')
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch business info')
+      }
+
+      const data: BusinessInfoResponse = await response.json()
+      setBusinessInfo(data.businessInfo)
     } catch (err) {
-      setError(err as Error)
+      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
-      setIsLoading(false)
+      setLoading(false)
     }
-  }
+  }, [])
 
-  const updateBusinessInfo = async (data: BusinessInfo) => {
+  // Create or update business info
+  const upsertBusinessInfo = useCallback(async (businessData: Partial<BusinessInfo>) => {
+    setLoading(true)
+    setError(null)
+
     try {
-      const updatedInfo = await businessInfoApi.update(data)
-      setBusinessInfo(updatedInfo)
-      return updatedInfo
-    } catch (err) {
-      setError(err as Error)
-      throw err
-    }
-  }
+      const response = await fetch('/api/business-info', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(businessData),
+      })
 
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to save business info')
+      }
+
+      const updatedBusinessInfo = await response.json()
+      setBusinessInfo(updatedBusinessInfo)
+      return updatedBusinessInfo
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save business info')
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  // Refresh business info
+  const refresh = useCallback(() => {
+    fetchBusinessInfo()
+  }, [fetchBusinessInfo])
+
+  // Initial load
   useEffect(() => {
     fetchBusinessInfo()
-  }, [])
+  }, [fetchBusinessInfo])
 
   return {
     businessInfo,
-    isLoading,
+    loading,
     error,
-    updateBusinessInfo,
-    refetch: fetchBusinessInfo
+    fetchBusinessInfo,
+    upsertBusinessInfo,
+    refresh,
   }
 }

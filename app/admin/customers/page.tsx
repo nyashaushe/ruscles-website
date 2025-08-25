@@ -14,53 +14,69 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, MoreHorizontal, Eye, Edit, Phone, Mail, Download, Plus, MapPin, Calendar } from "lucide-react"
+import { Search, MoreHorizontal, Eye, Edit, User, Mail, Phone, Plus, Trash2, Users } from "lucide-react"
+import { useCustomers, type Customer } from "@/hooks/use-customers"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { EmptyState } from "@/components/ui/empty-state"
+import { formatDate } from "@/lib/utils/date"
+import Link from "next/link"
 
 export default function CustomersPage() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [typeFilter, setTypeFilter] = useState("all")
 
-  // Customers data will be fetched from the database
-  // This will be implemented when customer management is added
-  const customers: any[] = []
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Active":
-        return "bg-green-100 text-green-800 border-green-200"
-      case "Inactive":
-        return "bg-gray-100 text-gray-800 border-gray-200"
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
-    }
-  }
-
-  const getTypeColor = (type: string) => {
-    switch (type) {
-      case "Residential":
-        return "bg-blue-100 text-blue-800 border-blue-200"
-      case "Commercial":
-        return "bg-purple-100 text-purple-800 border-purple-200"
-      case "Industrial":
-        return "bg-orange-100 text-orange-800 border-orange-200"
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200"
-    }
-  }
+  const {
+    customers,
+    loading,
+    error,
+    stats,
+    deleteCustomer,
+    refresh
+  } = useCustomers()
 
   const filteredCustomers = customers.filter((customer) => {
     const matchesSearch =
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       customer.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.location.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesType = typeFilter === "all" || customer.type.toLowerCase() === typeFilter.toLowerCase()
-
-    return matchesSearch && matchesType
+      (customer.phone && customer.phone.toLowerCase().includes(searchTerm.toLowerCase()))
+    return matchesSearch
   })
 
-  const totalCustomers = customers.length
-  const activeCustomers = customers.filter((c) => c.status === "Active").length
+  const handleDelete = async (customerId: string, customerName: string) => {
+    if (window.confirm(`Are you sure you want to delete the customer "${customerName}"?`)) {
+      try {
+        await deleteCustomer(customerId)
+        refresh()
+      } catch (error) {
+        console.error('Failed to delete customer:', error)
+      }
+    }
+  }
+
+  if (loading && customers.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <LoadingSpinner size="lg" />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle className="text-destructive">Error Loading Customers</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <Button onClick={refresh} variant="outline">
+              Try Again
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -68,67 +84,60 @@ export default function CustomersPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Customers</h1>
-          <p className="text-gray-600 mt-1">Manage your customer relationships and history</p>
+          <p className="text-gray-600 mt-1">Manage your customer database</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button size="sm">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Customer
+          <Button asChild size="sm">
+            <Link href="/admin/customers/new">
+              <Plus className="h-4 w-4 mr-2" />
+              New Customer
+            </Link>
           </Button>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="p-4">
-            <div className="flex items-center gap-2">
-              <div className="text-2xl font-bold text-gray-900">{totalCustomers}</div>
-            </div>
+            <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
             <p className="text-sm text-gray-600">Total Customers</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-4">
-            <div className="text-2xl font-bold text-green-600">{activeCustomers}</div>
+            <div className="text-2xl font-bold text-green-600">{stats.active}</div>
             <p className="text-sm text-gray-600">Active Customers</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-blue-600">{stats.newThisMonth}</div>
+            <p className="text-sm text-gray-600">New This Month</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="text-2xl font-bold text-purple-600">{stats.newThisYear}</div>
+            <p className="text-sm text-gray-600">New This Year</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Filters and Search */}
+      {/* Search */}
       <Card>
         <CardHeader>
-          <CardTitle>Filter Customers</CardTitle>
+          <CardTitle>Search Customers</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-                <Input
-                  placeholder="Search by name, email, or location..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8"
-                />
-              </div>
-            </div>
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Customer Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Types</SelectItem>
-                <SelectItem value="residential">Residential</SelectItem>
-                <SelectItem value="commercial">Commercial</SelectItem>
-                <SelectItem value="industrial">Industrial</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
+            <Input
+              placeholder="Search by name, email, or phone..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-8"
+            />
           </div>
         </CardContent>
       </Card>
@@ -137,94 +146,115 @@ export default function CustomersPage() {
       <Card>
         <CardHeader>
           <CardTitle>Customers ({filteredCustomers.length})</CardTitle>
-          <CardDescription>Complete customer database with project history</CardDescription>
+          <CardDescription>All customers with their project and form counts</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Customer</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Location</TableHead>
-                  <TableHead>Projects</TableHead>
-
-                  <TableHead>Last Project</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredCustomers.map((customer) => (
-                  <TableRow key={customer.id}>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium text-gray-900">{customer.name}</div>
-                        <div className="text-sm text-gray-500">{customer.email}</div>
-                        <div className="text-sm text-gray-500">{customer.phone}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getTypeColor(customer.type)}>{customer.type}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-sm text-gray-600">
-                        <MapPin className="h-3 w-3" />
-                        {customer.location}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-center">
-                        <div className="font-medium">{customer.totalProjects}</div>
-                        <div className="text-xs text-gray-500">projects</div>
-                      </div>
-                    </TableCell>
-
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-sm text-gray-600">
-                        <Calendar className="h-3 w-3" />
-                        {customer.lastProject}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusColor(customer.status)}>{customer.status}</Badge>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuItem>
-                            <Eye className="mr-2 h-4 w-4" />
-                            View Profile
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit Customer
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>
-                            <Phone className="mr-2 h-4 w-4" />
-                            Call Customer
-                          </DropdownMenuItem>
-                          <DropdownMenuItem>
-                            <Mail className="mr-2 h-4 w-4" />
-                            Send Email
-                          </DropdownMenuItem>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem>View Project History</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+          {filteredCustomers.length === 0 ? (
+            <EmptyState
+              icon={Users}
+              title="No customers found"
+              description={searchTerm
+                ? "No customers match your search criteria."
+                : "No customers have been added yet."}
+            />
+          ) : (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Contact</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Projects</TableHead>
+                    <TableHead>Forms</TableHead>
+                    <TableHead>Joined</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {filteredCustomers.map((customer) => (
+                    <TableRow key={customer.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <div className="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center">
+                            <User className="h-4 w-4 text-gray-600" />
+                          </div>
+                          <div>
+                            <div className="font-medium text-gray-900">{customer.name}</div>
+                            <div className="text-sm text-gray-500">ID: {customer.id.slice(0, 8)}...</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 text-sm">
+                            <Mail className="h-3 w-3 text-gray-400" />
+                            <span>{customer.email}</span>
+                          </div>
+                          {customer.phone && (
+                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                              <Phone className="h-3 w-3" />
+                              <span>{customer.phone}</span>
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={customer.isActive ? "default" : "secondary"}>
+                          {customer.isActive ? "Active" : "Inactive"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm font-medium">{customer._count.managedProjects}</div>
+                        <div className="text-xs text-gray-500">projects</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm font-medium">{customer._count.assignedForms}</div>
+                        <div className="text-xs text-gray-500">forms</div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm text-gray-600">
+                          {formatDate(customer.createdAt)}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem asChild>
+                              <Link href={`/admin/customers/${customer.id}`}>
+                                <Eye className="mr-2 h-4 w-4" />
+                                View Details
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link href={`/admin/customers/${customer.id}/edit`}>
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit Customer
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleDelete(customer.id, customer.name)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete Customer
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

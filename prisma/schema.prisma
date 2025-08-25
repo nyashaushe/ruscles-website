@@ -8,9 +8,8 @@ generator client {
 /// @seed="node scripts/seed.js"
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-  // Loads from .env.local file
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 // NextAuth.js Models
@@ -20,12 +19,12 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -75,6 +74,7 @@ model User {
   formResponses    FormResponse[]
   notifications    Notification[]
   updatedPages     PageContent[]
+  managedProjects  Project[]        @relation("ProjectManager")
 
   @@map("users")
 }
@@ -85,6 +85,64 @@ enum UserRole {
   USER
 }
 
+// Projects
+model Project {
+  id              String        @id @default(cuid())
+  title           String
+  description     String?
+  customerName    String
+  customerEmail   String?
+  customerPhone   String?
+  projectType     ProjectType
+  status          ProjectStatus @default(PLANNING)
+  priority        ProjectPriority @default(MEDIUM)
+  location        String?
+  startDate       DateTime?
+  endDate         DateTime?
+  estimatedHours  Int?
+  actualHours     Int?
+  budget          Float?
+  actualCost      Float?
+  progress        Int            @default(0) // 0-100 percentage
+  notes           String?
+  attachments     String         // JSON string of file URLs
+  tags            String         // JSON string of tags
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  // Relations
+  manager         User           @relation("ProjectManager", fields: [managerId], references: [id])
+  managerId       String
+
+  @@map("projects")
+}
+
+enum ProjectType {
+  ELECTRICAL
+  HVAC
+  REFRIGERATION
+  MAINTENANCE
+  INSTALLATION
+  REPAIR
+  UPGRADE
+}
+
+enum ProjectStatus {
+  PLANNING
+  IN_PROGRESS
+  ACTIVE
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum ProjectPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
 // Form submissions
 model FormSubmission {
   id          String           @id @default(cuid())
@@ -92,8 +150,8 @@ model FormSubmission {
   submittedAt DateTime         @default(now())
   status      FormStatus       @default(NEW)
   priority    FormPriority     @default(MEDIUM)
-  customerInfo Json            // Stores customer information as JSON
-  formData    Json             // Stores form data as JSON
+  customerInfo String          // JSON string of customer information
+  formData    String           // JSON string of form data
   notes       String?
   lastUpdated DateTime         @updatedAt
   createdAt   DateTime         @default(now())
@@ -102,7 +160,7 @@ model FormSubmission {
   responses   FormResponse[]
   assignedTo User?             @relation("AssignedUser", fields: [assignedToId], references: [id])
   assignedToId String?
-  tags       String[]          // Array of tags
+  tags       String            // JSON string of tags
 
   @@map("form_submissions")
 }
@@ -136,7 +194,7 @@ model FormResponse {
   respondedAt  DateTime     @default(now())
   method       ResponseMethod
   content      String
-  attachments  String[]     // Array of file URLs
+  attachments  String       // JSON string of file URLs
   createdAt    DateTime     @default(now())
 
   // Relations
@@ -158,14 +216,14 @@ model ContentItem {
   type           ContentType
   title          String
   slug           String        @unique
-  content        String        @db.Text
+  content        String
   excerpt        String?
   status         ContentStatus @default(DRAFT)
   publishedAt    DateTime?
   scheduledFor   DateTime?
   author         String
-  tags           String[]      // Array of tags
-  categories     String[]      // Array of categories
+  tags           String        // JSON string of tags
+  categories     String        // JSON string of categories
   featuredImage  String?
   seoTitle       String?
   seoDescription String?
@@ -215,7 +273,7 @@ model Testimonial {
   customerTitle  String?
   customerCompany String?
   customerPhoto  String?
-  testimonialText String  @db.Text
+  testimonialText String
   rating         Int?
   projectType    String?
   isVisible      Boolean  @default(true)
@@ -231,15 +289,15 @@ model Testimonial {
 model PortfolioItem {
   id              String           @id @default(cuid())
   title           String
-  description     String           @db.Text
+  description     String
   serviceCategory ServiceCategory
-  images          String[]         // Array of image URLs
+  images          String           // JSON string of image URLs
   thumbnailImage  String
   completionDate  DateTime
   clientName      String?
   projectValue    Float?
   location        String?
-  tags            String[]         // Array of tags
+  tags            String           // JSON string of tags
   isVisible       Boolean          @default(true)
   isFeatured      Boolean          @default(false)
   displayOrder    Int              @default(0)
@@ -260,7 +318,7 @@ model PageContent {
   id             String   @id @default(cuid())
   slug           String   @unique
   title          String
-  content        String   @db.Text
+  content        String
   metaTitle      String?
   metaDescription String?
   lastUpdated    DateTime @updatedAt
@@ -283,8 +341,8 @@ model Notification {
   isRead   Boolean         @default(false)
   priority NotificationPriority @default(MEDIUM)
   actionUrl String?
-  metadata Json?            // Stores additional metadata as JSON
-  createdAt DateTime        @default(now())
+  metadata String?         // JSON string of additional metadata
+  createdAt DateTime       @default(now())
 
   // Relations
   userId   String
@@ -312,15 +370,15 @@ model BusinessInfo {
   id                String   @id @default(cuid())
   companyName       String
   tagline           String?
-  description       String   @db.Text
+  description       String
   address           String?
   phone             String?
   email             String?
   website           String?
   logo              String?
-  socialMedia       Json?    // Stores social media links as JSON
-  businessHours     Json?    // Stores business hours as JSON
-  services          Json?    // Stores service descriptions as JSON
+  socialMedia       String?  // JSON string of social media links
+  businessHours     String?  // JSON string of business hours
+  services          String?  // JSON string of service descriptions
   updatedAt         DateTime @updatedAt
   updatedBy         String
 
@@ -331,7 +389,7 @@ model BusinessInfo {
 model Settings {
   id                    String   @id @default(cuid())
   key                   String   @unique
-  value                 String   @db.Text
+  value                 String
   description           String?
   isPublic             Boolean  @default(false)
   updatedAt             DateTime @updatedAt

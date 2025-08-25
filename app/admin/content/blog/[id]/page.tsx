@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -20,8 +21,10 @@ import {
   Clock,
   Share2,
 } from "lucide-react"
-import { useBlogPost } from "@/hooks/use-blog"
+import { useBlog } from "@/hooks/use-blog"
 import { formatDate } from "@/lib/utils/date"
+import Link from "next/link"
+import { Label } from "@/components/ui/label"
 
 interface BlogPostPreviewPageProps {
   params: {
@@ -31,38 +34,44 @@ interface BlogPostPreviewPageProps {
 
 export default function BlogPostPreviewPage({ params }: BlogPostPreviewPageProps) {
   const router = useRouter()
-  const { post, loading, publish, unpublish, schedule } = useBlogPost(params.id)
+  const { getBlogPost, updateBlogPost } = useBlog()
+  const [post, setPost] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const loadPost = async () => {
+      try {
+        const postData = await getBlogPost(params.id)
+        setPost(postData)
+      } catch (error) {
+        console.error('Failed to load post:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadPost()
+  }, [params.id, getBlogPost])
 
   const handlePublish = async () => {
     if (!post) return
-    const result = await publish(post.id)
-    if (result) {
+    try {
+      await updateBlogPost(post.id, { ...post, status: 'PUBLISHED' })
       // Refresh the page to show updated status
       window.location.reload()
+    } catch (error) {
+      console.error('Failed to publish post:', error)
     }
   }
 
   const handleUnpublish = async () => {
     if (!post) return
-    const result = await unpublish(post.id)
-    if (result) {
+    try {
+      await updateBlogPost(post.id, { ...post, status: 'DRAFT' })
       // Refresh the page to show updated status
       window.location.reload()
-    }
-  }
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "published":
-        return "success"
-      case "draft":
-        return "warning"
-      case "scheduled":
-        return "info"
-      case "archived":
-        return "secondary"
-      default:
-        return "secondary"
+    } catch (error) {
+      console.error('Failed to unpublish post:', error)
     }
   }
 
@@ -78,13 +87,11 @@ export default function BlogPostPreviewPage({ params }: BlogPostPreviewPageProps
     return (
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            onClick={() => router.push("/admin/content/blog")}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Blog Posts
+          <Button asChild variant="ghost">
+            <Link href="/admin/content/blog">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Blog Posts
+            </Link>
           </Button>
         </div>
         <Card>
@@ -104,233 +111,188 @@ export default function BlogPostPreviewPage({ params }: BlogPostPreviewPageProps
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            onClick={() => router.push("/admin/content/blog")}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Blog Posts
+          <Button asChild variant="ghost">
+            <Link href="/admin/content/blog">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Blog Posts
+            </Link>
           </Button>
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold text-gray-900">Blog Post Preview</h1>
-              <StatusBadge status={post.status} variant={getStatusColor(post.status)} />
-            </div>
-            <p className="text-gray-600 mt-1">Preview how this blog post will appear on your website</p>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Blog Post Preview</h1>
+            <p className="text-gray-600 mt-1">Preview and manage your blog post</p>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={() => router.push(`/admin/content/blog/${post.id}/edit`)}
-          >
-            <Edit className="h-4 w-4 mr-2" />
-            Edit
+
+        <div className="flex items-center gap-2">
+          <Button asChild variant="outline">
+            <Link href={`/admin/content/blog/${post.id}/edit`}>
+              <Edit className="h-4 w-4 mr-2" />
+              Edit Post
+            </Link>
           </Button>
-          
-          {post.status === "published" ? (
-            <Button
-              variant="outline"
-              onClick={handleUnpublish}
-            >
-              <Archive className="h-4 w-4 mr-2" />
-              Unpublish
-            </Button>
-          ) : (
+
+          {post.status === "DRAFT" && (
             <Button onClick={handlePublish}>
               <Globe className="h-4 w-4 mr-2" />
               Publish
             </Button>
           )}
+
+          {post.status === "PUBLISHED" && (
+            <Button onClick={handleUnpublish} variant="outline">
+              <Archive className="h-4 w-4 mr-2" />
+              Unpublish
+            </Button>
+          )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Main Content Preview */}
-        <div className="lg:col-span-3">
-          <ContentPreview
-            title={post.title}
-            content={post.content}
-            excerpt={post.excerpt}
-            featuredImage={post.featuredImage}
-            tags={post.tags}
-            categories={post.categories}
-            author={post.author}
-            publishedAt={post.publishedAt ? new Date(post.publishedAt) : new Date()}
-          />
-        </div>
-
-        {/* Sidebar with Post Details */}
-        <div className="space-y-6">
-          {/* Post Statistics */}
+      {/* Post Details */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Main Content */}
+        <div className="lg:col-span-2">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Post Statistics</CardTitle>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-xl">{post.title}</CardTitle>
+                  <CardDescription className="mt-2">
+                    {post.excerpt}
+                  </CardDescription>
+                </div>
+                <StatusBadge status={post.status} />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ContentPreview
+                title={post.title}
+                content={post.content}
+                excerpt={post.excerpt}
+                featuredImage={post.featuredImage}
+                author={post.user?.name || 'Unknown'}
+                publishedAt={post.publishedAt}
+                readingTime={post.blogPost?.readingTime}
+              />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-6">
+          {/* Post Info */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Post Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Eye className="h-4 w-4 text-gray-500" />
-                  <span className="text-sm text-gray-600">Views</span>
-                </div>
-                <span className="font-semibold">{post.viewCount?.toLocaleString() || 0}</span>
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-gray-400" />
+                <span className="text-sm text-gray-600">Author: {post.user?.name || 'Unknown'}</span>
               </div>
-              
-              {post.readingTime && (
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4 text-gray-500" />
-                    <span className="text-sm text-gray-600">Reading Time</span>
-                  </div>
-                  <span className="font-semibold">{post.readingTime} min</span>
+
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-gray-400" />
+                <span className="text-sm text-gray-600">
+                  Created: {formatDate(post.createdAt)}
+                </span>
+              </div>
+
+              {post.publishedAt && (
+                <div className="flex items-center gap-2">
+                  <Globe className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm text-gray-600">
+                    Published: {formatDate(post.publishedAt)}
+                  </span>
                 </div>
               )}
 
-              <Separator />
-
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Status</span>
-                  <StatusBadge status={post.status} variant={getStatusColor(post.status)} />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Author</span>
-                  <div className="flex items-center gap-1">
-                    <User className="h-3 w-3 text-gray-400" />
-                    <span className="text-sm font-medium">{post.author}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Created</span>
-                  <span className="text-sm font-medium">
-                    {formatDate(new Date(post.createdAt))}
+              {post.scheduledFor && (
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm text-gray-600">
+                    Scheduled: {formatDate(post.scheduledFor)}
                   </span>
                 </div>
+              )}
 
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Updated</span>
-                  <span className="text-sm font-medium">
-                    {formatDate(new Date(post.updatedAt))}
-                  </span>
-                </div>
-
-                {post.publishedAt && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Published</span>
-                    <span className="text-sm font-medium">
-                      {formatDate(new Date(post.publishedAt))}
-                    </span>
-                  </div>
-                )}
-
-                {post.scheduledFor && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Scheduled</span>
-                    <span className="text-sm font-medium">
-                      {formatDate(new Date(post.scheduledFor))}
-                    </span>
-                  </div>
-                )}
+              <div className="flex items-center gap-2">
+                <Eye className="h-4 w-4 text-gray-400" />
+                <span className="text-sm text-gray-600">
+                  Views: {post.blogPost?.viewCount || 0}
+                </span>
               </div>
+
+              {post.blogPost?.readingTime && (
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm text-gray-600">
+                    Reading time: {post.blogPost.readingTime} min
+                  </span>
+                </div>
+              )}
             </CardContent>
           </Card>
 
-          {/* Categories and Tags */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Categories & Tags</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Categories</h4>
-                {post.categories.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {post.categories.map((category) => (
-                      <Badge key={category} variant="secondary">
-                        {category}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500">No categories assigned</p>
-                )}
-              </div>
+          {/* Categories */}
+          {post.categories && post.categories.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Categories</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {post.categories.map((category: string, index: number) => (
+                    <Badge key={index} variant="secondary">
+                      {category}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-              <div>
-                <h4 className="text-sm font-medium text-gray-700 mb-2">Tags</h4>
-                {post.tags.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.map((tag) => (
-                      <Badge key={tag} variant="outline" className="flex items-center gap-1">
-                        <Tag className="h-3 w-3" />
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-gray-500">No tags assigned</p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Tags */}
+          {post.tags && post.tags.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Tags</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag: string, index: number) => (
+                    <Badge key={index} variant="outline" className="gap-1">
+                      <Tag className="h-3 w-3" />
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
-          {/* SEO Information */}
+          {/* SEO Info */}
           {(post.seoTitle || post.seoDescription) && (
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">SEO Information</CardTitle>
+                <CardTitle>SEO Information</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-4">
                 {post.seoTitle && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-1">SEO Title</h4>
-                    <p className="text-sm text-gray-600">{post.seoTitle}</p>
+                    <Label className="text-sm font-medium">SEO Title</Label>
+                    <p className="text-sm text-gray-600 mt-1">{post.seoTitle}</p>
                   </div>
                 )}
-                
+
                 {post.seoDescription && (
                   <div>
-                    <h4 className="text-sm font-medium text-gray-700 mb-1">SEO Description</h4>
-                    <p className="text-sm text-gray-600">{post.seoDescription}</p>
+                    <Label className="text-sm font-medium">SEO Description</Label>
+                    <p className="text-sm text-gray-600 mt-1">{post.seoDescription}</p>
                   </div>
                 )}
               </CardContent>
             </Card>
           )}
-
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button
-                variant="outline"
-                className="w-full justify-start"
-                onClick={() => router.push(`/admin/content/blog/${post.id}/edit`)}
-              >
-                <Edit className="h-4 w-4 mr-2" />
-                Edit Post
-              </Button>
-              
-              {post.status === "published" && (
-                <Button
-                  variant="outline"
-                  className="w-full justify-start"
-                  onClick={() => {
-                    // This would open the public blog post in a new tab
-                    window.open(`/blog/${post.slug}`, '_blank')
-                  }}
-                >
-                  <Share2 className="h-4 w-4 mr-2" />
-                  View Public Post
-                </Button>
-              )}
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
