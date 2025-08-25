@@ -27,6 +27,20 @@ export const authOptions: NextAuthOptions = {
 
             return false // Deny access to unauthorized emails
         },
+        async jwt({ token, user, account }) {
+            // Persist user data in the token
+            if (user) {
+                token.user = user
+            }
+            return token
+        },
+        async session({ session, token }) {
+            // Send properties to the client
+            if (token.user) {
+                session.user = token.user as any
+            }
+            return session
+        },
     },
     pages: {
         signIn: '/auth/signin',
@@ -34,8 +48,10 @@ export const authOptions: NextAuthOptions = {
     },
     session: {
         strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60, // 30 days
     },
     secret: process.env.NEXTAUTH_SECRET,
+    debug: process.env.NODE_ENV === 'development',
 }
 
 

@@ -2,9 +2,6 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -17,154 +14,58 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
-import { Switch } from "@/components/ui/switch"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import {
   ArrowLeft,
-  Upload,
-  Star,
-  User,
-  Building,
-  MessageSquare,
   Save,
-  Eye,
-  EyeOff,
+  MessageSquare,
 } from "lucide-react"
-import { useTestimonial } from "@/hooks/use-testimonials"
-import { CreateTestimonialData } from "@/lib/api/testimonials"
-
-const testimonialSchema = z.object({
-  customerName: z.string().min(1, "Customer name is required"),
-  customerTitle: z.string().optional(),
-  customerCompany: z.string().optional(),
-  testimonialText: z.string().min(10, "Testimonial must be at least 10 characters"),
-  rating: z.number().min(1).max(5).optional(),
-  projectType: z.enum(["electrical", "hvac", "refrigeration"]).optional(),
-  isVisible: z.boolean().default(true),
-  isFeatured: z.boolean().default(false),
-})
-
-type TestimonialFormData = z.infer<typeof testimonialSchema>
+import { useTestimonials } from "@/hooks/use-testimonials-new"
+import Link from "next/link"
 
 export default function NewTestimonialPage() {
   const router = useRouter()
-  const [customerPhoto, setCustomerPhoto] = useState<string>("")
-  const [uploading, setUploading] = useState(false)
-  const { create, uploadPhoto } = useTestimonial()
+  const { createTestimonial, loading } = useTestimonials()
+  const [saving, setSaving] = useState(false)
 
-  const form = useForm<TestimonialFormData>({
-    resolver: zodResolver(testimonialSchema),
-    defaultValues: {
-      customerName: "",
-      customerTitle: "",
-      customerCompany: "",
-      testimonialText: "",
-      rating: undefined,
-      projectType: undefined,
-      isVisible: true,
-      isFeatured: false,
-    },
+  const [formData, setFormData] = useState({
+    customerName: "",
+    customerTitle: "",
+    customerCompany: "",
+    customerPhoto: "",
+    testimonialText: "",
+    rating: 5,
+    projectType: "",
+    isVisible: true,
+    isFeatured: false,
   })
 
-  const handlePhotoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      form.setError('root', { message: 'Please select a valid image file' })
-      return
-    }
-
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      form.setError('root', { message: 'Image must be less than 5MB' })
-      return
-    }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setSaving(true)
 
     try {
-      setUploading(true)
-      const photoUrl = await uploadPhoto(file)
-      if (photoUrl) {
-        setCustomerPhoto(photoUrl)
-      }
+      await createTestimonial(formData)
+      router.push("/admin/content/testimonials")
     } catch (error) {
-      form.setError('root', { message: 'Failed to upload photo' })
-    } finally {
-      setUploading(false)
+      console.error("Failed to create testimonial:", error)
+      setSaving(false)
     }
   }
 
-  const onSubmit = async (data: TestimonialFormData) => {
-    try {
-      const testimonialData: CreateTestimonialData = {
-        ...data,
-        customerPhoto: customerPhoto || undefined,
-      }
-
-      const newTestimonial = await create(testimonialData)
-      if (newTestimonial) {
-        router.push("/admin/content/testimonials")
-      }
-    } catch (error) {
-      form.setError('root', { message: 'Failed to create testimonial' })
-    }
-  }
-
-  const getInitials = (name: string) => {
-    return name
-      .split(' ')
-      .map(word => word[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2)
-  }
-
-  const renderStars = (rating: number, onRatingChange: (rating: number) => void) => {
-    return (
-      <div className="flex items-center gap-1">
-        {Array.from({ length: 5 }, (_, i) => (
-          <button
-            key={i}
-            type="button"
-            onClick={() => onRatingChange(i + 1)}
-            className="focus:outline-none"
-          >
-            <Star
-              className={`h-5 w-5 transition-colors ${
-                i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300 hover:text-yellow-300'
-              }`}
-            />
-          </button>
-        ))}
-        <span className="text-sm text-gray-500 ml-2">
-          {rating > 0 ? `${rating} star${rating !== 1 ? 's' : ''}` : 'No rating'}
-        </span>
-      </div>
-    )
+  const handleChange = (field: string, value: any) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => router.back()}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
+        <Button asChild variant="ghost" size="sm">
+          <Link href="/admin/content/testimonials">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Testimonials
+          </Link>
         </Button>
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Add New Testimonial</h1>
@@ -172,299 +73,167 @@ export default function NewTestimonialPage() {
         </div>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Customer Information */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <User className="h-5 w-5" />
-                    Customer Information
-                  </CardTitle>
-                  <CardDescription>
-                    Enter the customer's details and contact information
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="customerName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Customer Name *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John Doe" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+      {/* Form */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Testimonial Information</CardTitle>
+          <CardDescription>Fill in the testimonial details below</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Customer Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="customerName">Customer Name *</Label>
+                <Input
+                  id="customerName"
+                  value={formData.customerName}
+                  onChange={(e) => handleChange("customerName", e.target.value)}
+                  placeholder="Enter customer's full name"
+                  required
+                />
+              </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={form.control}
-                      name="customerTitle"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Job Title</FormLabel>
-                          <FormControl>
-                            <Input placeholder="CEO, Manager, etc." {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+              <div className="space-y-2">
+                <Label htmlFor="customerTitle">Job Title</Label>
+                <Input
+                  id="customerTitle"
+                  value={formData.customerTitle}
+                  onChange={(e) => handleChange("customerTitle", e.target.value)}
+                  placeholder="Enter customer's job title"
+                />
+              </div>
 
-                    <FormField
-                      control={form.control}
-                      name="customerCompany"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Company</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Company Name" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+              <div className="space-y-2">
+                <Label htmlFor="customerCompany">Company</Label>
+                <Input
+                  id="customerCompany"
+                  value={formData.customerCompany}
+                  onChange={(e) => handleChange("customerCompany", e.target.value)}
+                  placeholder="Enter customer's company"
+                />
+              </div>
 
-                  {/* Customer Photo Upload */}
-                  <div className="space-y-2">
-                    <Label>Customer Photo</Label>
-                    <div className="flex items-center gap-4">
-                      <Avatar className="h-16 w-16">
-                        <AvatarImage src={customerPhoto} />
-                        <AvatarFallback>
-                          {form.watch("customerName") ? getInitials(form.watch("customerName")) : <User className="h-6 w-6" />}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handlePhotoUpload}
-                          className="hidden"
-                          id="photo-upload"
-                          disabled={uploading}
-                        />
-                        <Label
-                          htmlFor="photo-upload"
-                          className="cursor-pointer inline-flex items-center gap-2 px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
-                        >
-                          {uploading ? (
-                            <LoadingSpinner size="sm" />
-                          ) : (
-                            <Upload className="h-4 w-4" />
-                          )}
-                          {uploading ? "Uploading..." : "Upload Photo"}
-                        </Label>
-                        <p className="text-xs text-gray-500 mt-1">
-                          Optional. Max 5MB. JPG, PNG, or GIF.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Testimonial Content */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MessageSquare className="h-5 w-5" />
-                    Testimonial Content
-                  </CardTitle>
-                  <CardDescription>
-                    Enter the customer's testimonial and feedback
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="testimonialText"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Testimonial Text *</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Enter the customer's testimonial..."
-                            className="min-h-[120px]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          The customer's feedback about your services
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="rating"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Rating</FormLabel>
-                        <FormControl>
-                          <div>
-                            {renderStars(field.value || 0, field.onChange)}
-                          </div>
-                        </FormControl>
-                        <FormDescription>
-                          Optional star rating from the customer
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="projectType"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Project Type</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select project type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="electrical">Electrical</SelectItem>
-                            <SelectItem value="hvac">HVAC</SelectItem>
-                            <SelectItem value="refrigeration">Refrigeration</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>
-                          The type of project this testimonial relates to
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
+              <div className="space-y-2">
+                <Label htmlFor="customerPhoto">Photo URL</Label>
+                <Input
+                  id="customerPhoto"
+                  value={formData.customerPhoto}
+                  onChange={(e) => handleChange("customerPhoto", e.target.value)}
+                  placeholder="Enter customer photo URL"
+                />
+              </div>
             </div>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Publish Settings */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Publish Settings</CardTitle>
-                  <CardDescription>
-                    Control how this testimonial appears on your website
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <FormField
-                    control={form.control}
-                    name="isVisible"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                        <div className="space-y-0.5">
-                          <FormLabel className="flex items-center gap-2">
-                            {field.value ? (
-                              <Eye className="h-4 w-4 text-green-600" />
-                            ) : (
-                              <EyeOff className="h-4 w-4 text-gray-400" />
-                            )}
-                            Visible on Website
-                          </FormLabel>
-                          <FormDescription>
-                            Show this testimonial on your website
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="isFeatured"
-                    render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                        <div className="space-y-0.5">
-                          <FormLabel className="flex items-center gap-2">
-                            <Star className={`h-4 w-4 ${field.value ? 'fill-yellow-400 text-yellow-400' : 'text-gray-400'}`} />
-                            Featured Testimonial
-                          </FormLabel>
-                          <FormDescription>
-                            Highlight this testimonial prominently
-                          </FormDescription>
-                        </div>
-                        <FormControl>
-                          <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
-
-              {/* Actions */}
-              <Card>
-                <CardContent className="p-6">
-                  <div className="space-y-3">
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={form.formState.isSubmitting}
-                    >
-                      {form.formState.isSubmitting ? (
-                        <>
-                          <LoadingSpinner size="sm" className="mr-2" />
-                          Creating...
-                        </>
-                      ) : (
-                        <>
-                          <Save className="h-4 w-4 mr-2" />
-                          Create Testimonial
-                        </>
-                      )}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => router.back()}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+            {/* Testimonial Content */}
+            <div className="space-y-2">
+              <Label htmlFor="testimonialText">Testimonial Text *</Label>
+              <Textarea
+                id="testimonialText"
+                value={formData.testimonialText}
+                onChange={(e) => handleChange("testimonialText", e.target.value)}
+                placeholder="Enter the customer's testimonial..."
+                rows={6}
+                required
+              />
             </div>
-          </div>
 
-          {/* Form Errors */}
-          {form.formState.errors.root && (
-            <Card className="border-red-200 bg-red-50">
-              <CardContent className="p-4">
-                <p className="text-sm text-red-600">
-                  {form.formState.errors.root.message}
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </form>
-      </Form>
+            {/* Rating and Project Type */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="rating">Rating</Label>
+                <Select 
+                  value={formData.rating.toString()} 
+                  onValueChange={(value) => handleChange("rating", parseInt(value))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select rating" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">1 Star</SelectItem>
+                    <SelectItem value="2">2 Stars</SelectItem>
+                    <SelectItem value="3">3 Stars</SelectItem>
+                    <SelectItem value="4">4 Stars</SelectItem>
+                    <SelectItem value="5">5 Stars</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="projectType">Project Type</Label>
+                <Select 
+                  value={formData.projectType} 
+                  onValueChange={(value) => handleChange("projectType", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select project type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ELECTRICAL">Electrical</SelectItem>
+                    <SelectItem value="HVAC">HVAC</SelectItem>
+                    <SelectItem value="REFRIGERATION">Refrigeration</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Visibility Settings */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="isVisible">Visibility</Label>
+                <Select 
+                  value={formData.isVisible.toString()} 
+                  onValueChange={(value) => handleChange("isVisible", value === "true")}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select visibility" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">Visible</SelectItem>
+                    <SelectItem value="false">Hidden</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="isFeatured">Featured</Label>
+                <Select 
+                  value={formData.isFeatured.toString()} 
+                  onValueChange={(value) => handleChange("isFeatured", value === "true")}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select featured status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="true">Featured</SelectItem>
+                    <SelectItem value="false">Not Featured</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="flex justify-end gap-4">
+              <Button asChild variant="outline">
+                <Link href="/admin/content/testimonials">Cancel</Link>
+              </Button>
+              <Button type="submit" disabled={saving || loading}>
+                {saving ? (
+                  <>
+                    <LoadingSpinner className="mr-2 h-4 w-4" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Create Testimonial
+                  </>
+                )}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   )
 }

@@ -8,8 +8,8 @@ generator client {
 /// @seed="node scripts/seed.js"
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // NextAuth.js Models
