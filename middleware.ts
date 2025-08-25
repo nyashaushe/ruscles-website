@@ -12,10 +12,9 @@ export default withAuth(
                 return NextResponse.redirect(new URL("/auth/signin", req.url))
             }
 
-            // Check if user has admin role
-            if (token.role !== "ADMIN") {
-                return NextResponse.redirect(new URL("/auth/error?error=AccessDenied", req.url))
-            }
+            // For now, allow any authenticated user to access admin routes
+            // The signIn callback in auth.ts will handle email restrictions
+            return NextResponse.next()
         }
 
         return NextResponse.next()

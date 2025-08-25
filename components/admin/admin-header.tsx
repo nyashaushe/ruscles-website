@@ -95,7 +95,7 @@ export function AdminHeader() {
                   {session?.user?.email}
                 </p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  Role: {session?.user?.role || "Admin"}
+                  Administrator
                 </p>
               </div>
             </DropdownMenuLabel>

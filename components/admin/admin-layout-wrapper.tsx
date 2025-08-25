@@ -12,9 +12,10 @@ interface AdminLayoutWrapperProps {
 export function AdminLayoutWrapper({ children, navbar, footer }: AdminLayoutWrapperProps) {
     const pathname = usePathname()
     const isAdminRoute = pathname?.startsWith('/admin')
+    const isAuthRoute = pathname?.startsWith('/auth')
 
-    // For admin routes, only render the main content without navbar and footer
-    if (isAdminRoute) {
+    // For admin routes and auth routes, only render the main content without navbar and footer
+    if (isAdminRoute || isAuthRoute) {
         return <>{children}</>
     }
 
