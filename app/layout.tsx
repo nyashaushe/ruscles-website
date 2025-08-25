@@ -5,6 +5,7 @@ import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import AuthProvider from "@/components/providers/session-provider"
+import { AdminLayoutWrapper } from "@/components/admin/admin-layout-wrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -29,9 +30,12 @@ export default function RootLayout({
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <AuthProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
+          <AdminLayoutWrapper
+            navbar={<Navbar />}
+            footer={<Footer />}
+          >
+            {children}
+          </AdminLayoutWrapper>
         </AuthProvider>
       </body>
     </html>

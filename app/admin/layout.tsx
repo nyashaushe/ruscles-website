@@ -39,14 +39,16 @@ export default function AdminLayout({
   }
 
   return (
-    <SidebarProvider>
-      <NotificationProvider>
-        <AdminSidebar />
-        <SidebarInset>
-          <AdminHeader />
-          <main className="flex-1 p-4 md:p-6 space-y-6">{children}</main>
-        </SidebarInset>
-      </NotificationProvider>
-    </SidebarProvider>
+    <div className="admin-layout">
+      <SidebarProvider>
+        <NotificationProvider>
+          <AdminSidebar />
+          <SidebarInset>
+            <AdminHeader />
+            <main className="flex-1 p-4 md:p-6 space-y-6">{children}</main>
+          </SidebarInset>
+        </NotificationProvider>
+      </SidebarProvider>
+    </div>
   )
 }
