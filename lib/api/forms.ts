@@ -49,6 +49,12 @@ export class FormsApi {
     return apiRequest(`/forms/${id}`)
   }
 
+  // Get form by ID (alias for compatibility)
+  static async getFormById(id: string): Promise<FormSubmission> {
+    const result = await this.getFormSubmission(id)
+    return result.data
+  }
+
   // Update form submission status and notes
   static async updateFormSubmission(
     id: string,
@@ -58,6 +64,15 @@ export class FormsApi {
       method: 'PATCH',
       body: JSON.stringify(updates),
     })
+  }
+
+  // Update form (alias for compatibility)
+  static async updateForm(
+    id: string,
+    updates: Partial<Pick<FormSubmission, 'status' | 'priority' | 'assignedTo' | 'notes' | 'tags'>>
+  ): Promise<FormSubmission> {
+    const result = await this.updateFormSubmission(id, updates)
+    return result.data
   }
 
   // Send response to form submission
@@ -83,6 +98,36 @@ export class FormsApi {
       method: 'POST',
       body: formData,
       headers: {}, // Let browser set Content-Type for FormData
+    })
+  }
+
+  // Send form response (alternative interface)
+  static async sendFormResponse(
+    formId: string,
+    responseData: {
+      to: string
+      subject: string
+      message: string
+      template?: string
+      priority?: string
+      sendCopy?: boolean
+      scheduleFor?: Date | null
+    }
+  ): Promise<void> {
+    await apiRequest(`/forms/${formId}/respond`, {
+      method: 'POST',
+      body: JSON.stringify(responseData),
+    })
+  }
+
+  // Save draft response
+  static async saveDraftResponse(
+    formId: string,
+    responseData: any
+  ): Promise<void> {
+    await apiRequest(`/forms/${formId}/draft`, {
+      method: 'POST',
+      body: JSON.stringify(responseData),
     })
   }
 

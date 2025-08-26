@@ -4,6 +4,8 @@ export interface FormSubmission {
   submittedAt: Date
   status: 'new' | 'in_progress' | 'responded' | 'completed' | 'archived'
   priority: 'low' | 'medium' | 'high' | 'urgent'
+  subject?: string
+  message: string
   customerInfo: {
     name: string
     email: string
