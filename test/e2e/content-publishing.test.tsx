@@ -1,6 +1,6 @@
+import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ContentPublishingWorkflow } from '@/test/components/content-publishing-workflow'
 
 // Mock API calls
 vi.mock('@/lib/api/blog', () => ({

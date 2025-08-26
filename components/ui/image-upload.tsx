@@ -201,6 +201,7 @@ export function ImageUpload({
     <div className={cn("space-y-4", className)}>
       {/* Upload Area - Enhanced for Mobile */}
       <div
+        data-testid="drop-zone"
         className={cn(
           "border-2 border-dashed rounded-lg p-6 md:p-8 text-center transition-colors touch-manipulation",
           isDragOver 
@@ -246,6 +247,7 @@ export function ImageUpload({
             accept={acceptedTypes.join(',')}
             onChange={handleFileSelect}
             className="hidden"
+            data-testid="file-input"
           />
         </div>
       </div>

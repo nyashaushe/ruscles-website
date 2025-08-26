@@ -1,5 +1,15 @@
 import '@testing-library/jest-dom'
 
+// Setup DOM environment
+beforeEach(() => {
+  // Clear any existing DOM content
+  document.body.innerHTML = ''
+  // Ensure document.body exists for React DOM
+  if (!document.body) {
+    document.documentElement.appendChild(document.createElement('body'))
+  }
+})
+
 // Mock Next.js router
 const mockRouter = {
   push: vi.fn(),
