@@ -72,6 +72,22 @@ export function FormsTable({
   onSort
 }: FormsTableProps) {
   const [selectedForms, setSelectedForms] = useState<string[]>([])
+  const [deletingId, setDeletingId] = useState<string|null>(null);
+
+  const handleDelete = async (formId: string) => {
+    setDeletingId(formId);
+    try {
+      const result = await import('@/lib/api/forms').then(m => m.FormsApi.deleteFormSubmission(formId));
+      if (result.success && onRefresh) {
+        onRefresh();
+      }
+    } catch (err) {
+      // Optionally show error toast
+      console.error('Failed to delete form:', err);
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
@@ -302,6 +318,14 @@ export function FormsTable({
                       <DropdownMenuItem>
                         <Archive className="h-4 w-4 mr-2" />
                         Archive
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleDelete(form.id)}
+                        disabled={deletingId === form.id}
+                        className="text-red-600"
+                      >
+                        <svg className="h-4 w-4 mr-2" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                        {deletingId === form.id ? 'Deleting...' : 'Delete'}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

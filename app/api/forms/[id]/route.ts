@@ -1,3 +1,20 @@
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    try {
+        await prisma.formSubmission.delete({
+            where: { id: params.id }
+        });
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting form submission:', error);
+        return NextResponse.json(
+            { success: false, error: 'Failed to delete form submission' },
+            { status: 500 }
+        );
+    }
+}
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 

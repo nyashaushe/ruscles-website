@@ -20,6 +20,12 @@ async function apiRequest<T>(endpoint: string, options: RequestInit = {}): Promi
 }
 
 export class FormsApi {
+  // Delete form submission by ID
+  static async deleteFormSubmission(id: string): Promise<{ success: boolean }> {
+    return apiRequest(`/forms/${id}`, {
+      method: 'DELETE',
+    });
+  }
   // Get all form submissions with filtering and pagination
   static async getFormSubmissions(
     filters?: FormFilters,
