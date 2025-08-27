@@ -65,11 +65,11 @@ const data: {
     avatar: "/placeholder.svg?height=32&width=32",
   },
   navMain: [
-    {
-      title: "Dashboard",
-      url: "/admin",
-      icon: Home,
-    },
+    // {
+    //   title: "Dashboard",
+    //   url: "/admin",
+    //   icon: Home,
+    // },
     {
       title: "Forms & Inquiries",
       url: "/admin/forms",
