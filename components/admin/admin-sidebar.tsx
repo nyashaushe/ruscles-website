@@ -56,7 +56,7 @@ const data: {
     avatar: string
   }
   navMain: NavItem[]
-  navSecondary: NavItem[]
+  navSecondary: NavItem[] // Ensure navSecondary is always defined
 } = {
   user: {
     name: "Admin User",
@@ -121,9 +121,10 @@ const data: {
       ],
     },
   ],
-}
+  navSecondary: [], // Ensure navSecondary is always defined as an empty array
+};
 
-export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
