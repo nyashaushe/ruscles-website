@@ -39,7 +39,7 @@ export default function PortfolioPage() {
         "Reduced food spoilage by 40%",
         "Client satisfaction: 100%",
       ],
-      image: "/placeholder.svg?height=300&width=400",
+    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80', // Cold Room Installation
     },
     {
       title: "Residential Electrical Rewiring",
@@ -67,7 +67,7 @@ export default function PortfolioPage() {
         "Improved electrical safety",
         "Increased property value by 15%",
       ],
-      image: "/placeholder.svg?height=300&width=400",
+    image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80', // Electrical Rewiring
     },
     {
       title: "Restaurant HVAC System Upgrade",
@@ -95,7 +95,7 @@ export default function PortfolioPage() {
         "Enhanced customer comfort",
         "Noise levels reduced by 50%",
       ],
-      image: "/placeholder.svg?height=300&width=400",
+    image: 'https://images.unsplash.com/photo-1581091012184-7e0cdfbb6795?auto=format&fit=crop&w=800&q=80', // Restaurant HVAC
     },
     {
       title: "Office Building Electrical Maintenance",
@@ -123,7 +123,7 @@ export default function PortfolioPage() {
         "Improved tenant satisfaction",
         "Extended equipment lifespan",
       ],
-      image: "/placeholder.svg?height=300&width=400",
+    image: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=800&q=80', // Electrical Maintenance
     },
     {
       title: "Industrial Freezer Installation",
@@ -151,7 +151,7 @@ export default function PortfolioPage() {
         "Full food safety compliance",
         "ROI achieved within 18 months",
       ],
-      image: "/placeholder.svg?height=300&width=400",
+    image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80', // Industrial Freezer
     },
     {
       title: "Residential AC Installation",
@@ -179,7 +179,7 @@ export default function PortfolioPage() {
         "100% customer satisfaction",
         "Ongoing maintenance contracts secured",
       ],
-      image: "/placeholder.svg?height=300&width=400",
+    image: 'https://images.unsplash.com/photo-1508873699372-7aeab60b44c1?auto=format&fit=crop&w=800&q=80', // AC Installation
     },
   ]
 
