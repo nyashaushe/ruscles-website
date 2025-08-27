@@ -35,6 +35,7 @@ export async function submitContactForm(formData: FormData) {
       emergency,
     }
 
+
     // Submit to the forms API
     const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/forms`, {
       method: 'POST',
@@ -58,6 +59,27 @@ export async function submitContactForm(formData: FormData) {
     if (!result.success) {
       throw new Error(result.error || 'Failed to submit form')
     }
+
+    // Submit to Formspree for admin email notification
+    // Replace 'your_form_id' with your actual Formspree form ID
+    const formspreeEndpoint = 'https://formspree.io/f/your_form_id';
+    const formspreePayload = {
+      name: `${firstName} ${lastName}`,
+      email,
+      phone,
+      service,
+      propertyType,
+      message,
+      timeline,
+      emergency: emergency ? 'Yes' : 'No',
+    };
+    await fetch(formspreeEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formspreePayload),
+    });
 
     return {
       success: true,
