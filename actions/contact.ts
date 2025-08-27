@@ -60,6 +60,25 @@ export async function submitContactForm(formData: FormData) {
       throw new Error(result.error || 'Failed to submit form')
     }
 
+    // Send contact email via EmailJS
+    try {
+      const { sendContactEmail } = await import('@/lib/emailjs');
+      await sendContactEmail({
+        firstName,
+        lastName,
+        email,
+        phone,
+        service,
+        propertyType,
+        message,
+        timeline,
+        emergency,
+      });
+    } catch (emailError) {
+      console.error('EmailJS error:', emailError);
+      // Optionally, you can still return success if admin API worked
+    }
+
     // Submit to Formspree for admin email notification
     // Replace 'your_form_id' with your actual Formspree form ID
     const formspreeEndpoint = 'https://formspree.io/f/your_form_id';
