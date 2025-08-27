@@ -199,11 +199,11 @@ export default function AdminDashboard() {
             <CardDescription>Your schedule for today</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="text-center py-8 text-gray-500">
+            {/* <div className="text-center py-8 text-gray-500">
               <Calendar className="h-12 w-12 mx-auto mb-4 text-gray-300" />
               <p className="text-sm">Task management coming soon</p>
               <p className="text-xs">This will integrate with your calendar and project deadlines</p>
-            </div>
+            </div> */}
             <Button variant="outline" className="w-full mt-4 bg-transparent" size="sm">
               View Full Schedule
             </Button>

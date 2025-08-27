@@ -26,7 +26,7 @@ export default function ServicesPage() {
         "Safety assessments",
         "Circuit installations",
       ],
-      pricing: "Starting from $150",
+      pricing: "Quote on request",
       emergency: true,
     },
     {
@@ -41,7 +41,7 @@ export default function ServicesPage() {
         "Power restoration",
         "Safety inspections",
       ],
-      pricing: "Starting from $80",
+      pricing: "Quote on request",
       emergency: true,
     },
     {
@@ -56,7 +56,7 @@ export default function ServicesPage() {
         "Duct cleaning and sealing",
         "Thermostat installation",
       ],
-      pricing: "Starting from $200",
+      pricing: "Quote on request",
       emergency: true,
     },
     {
@@ -86,7 +86,7 @@ export default function ServicesPage() {
         "Refrigerant services",
         "Energy efficiency upgrades",
       ],
-      pricing: "Starting from $120",
+      pricing: "Quote on request",
       emergency: true,
     },
     {
@@ -101,7 +101,7 @@ export default function ServicesPage() {
         "Emergency support",
         "Warranty services",
       ],
-      pricing: "Starting from $100",
+      pricing: "Quote on request",
       emergency: false,
     },
   ]
