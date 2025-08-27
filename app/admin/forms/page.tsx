@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -13,14 +14,22 @@ import { useForms, useFormStats } from "@/hooks/use-forms"
 import { FormsApi } from "@/lib/api/forms"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import type { FormFilters, FormSubmission } from "@/lib/types"
-
 export default function FormsPage() {
-  const [activeTab, setActiveTab] = useState("all")
+  const searchParams = useSearchParams();
+  // Map status query param to tab value
+  const statusToTab = (status?: string) => {
+    if (!status) return "all";
+    if (status === "new") return "new";
+    if (status === "in_progress") return "in-progress";
+    if (status === "responded" || status === "completed") return "completed";
+    return "all";
+  };
+  const initialTab = statusToTab(searchParams?.get("status"));
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [showFilters, setShowFilters] = useState(false)
   const [sortBy, setSortBy] = useState<string>('submittedAt')
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc')
   const { stats, loading: statsLoading } = useFormStats()
-  
   // Initialize filters based on active tab
   const getFiltersForTab = (tab: string): FormFilters => {
     switch (tab) {
@@ -34,28 +43,32 @@ export default function FormsPage() {
         return {}
     }
   }
-
-  const [filters, setFilters] = useState<FormFilters>(getFiltersForTab(activeTab))
-  const { forms, loading, error, pagination, updateFilters, updatePage, refreshForms } = useForms(filters)
-
+  const [filters, setFilters] = useState<FormFilters>(getFiltersForTab(initialTab));
+  const { forms, loading, error, pagination, updateFilters, updatePage, refreshForms } = useForms(filters);
+  // Update tab and filters when status query param changes
+  useEffect(() => {
+    const status = searchParams?.get("status");
+    const tab = statusToTab(status);
+    setActiveTab(tab);
+    const newFilters = getFiltersForTab(tab);
+    setFilters(newFilters);
+    updateFilters(newFilters);
+  }, [searchParams]);
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
     const newFilters = getFiltersForTab(tab)
     setFilters(newFilters)
     updateFilters(newFilters)
   }
-
   const handleFiltersChange = (newFilters: FormFilters) => {
     setFilters(newFilters)
     updateFilters(newFilters)
   }
-
   const handleClearFilters = () => {
     const clearedFilters = getFiltersForTab(activeTab)
     setFilters(clearedFilters)
     updateFilters(clearedFilters)
   }
-
   const handleSort = (field: string) => {
     if (sortBy === field) {
       setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
@@ -64,7 +77,6 @@ export default function FormsPage() {
       setSortOrder('asc')
     }
   }
-
   const handleBulkUpdate = async (updates: Partial<FormSubmission>, formIds: string[]) => {
     try {
       await FormsApi.bulkUpdateForms(formIds, updates)
@@ -74,7 +86,6 @@ export default function FormsPage() {
       throw error
     }
   }
-
   const statsCards = [
     {
       title: "Total Forms",
@@ -104,7 +115,6 @@ export default function FormsPage() {
       color: "text-green-600",
     },
   ]
-
   if (error) {
     return (
       <div className="space-y-6">
@@ -123,9 +133,8 @@ export default function FormsPage() {
           </CardContent>
         </Card>
       </div>
-    )
+    );
   }
-
   return (
     <div className="space-y-6">
       {/* Header */}
