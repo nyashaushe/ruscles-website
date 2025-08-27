@@ -93,47 +93,9 @@ const data: {
       ],
     },
     {
-      title: "Projects",
-      url: "/admin/projects",
-      icon: Wrench,
-      items: [
-        {
-          title: "All Projects",
-          url: "/admin/projects",
-        },
-        {
-          title: "Active Projects",
-          url: "/admin/projects?status=active",
-        },
-        {
-          title: "Completed Projects",
-          url: "/admin/projects?status=completed",
-        },
-      ],
-    },
-    {
       title: "Customers",
       url: "/admin/customers",
       icon: Users,
-    },
-    {
-      title: "Services",
-      url: "/admin/services",
-      icon: Zap,
-      items: [
-        {
-          title: "Electrical Services",
-          url: "/admin/services/electrical",
-        },
-        {
-          title: "HVAC Services",
-          url: "/admin/services/hvac",
-        },
-        {
-          title: "Refrigeration",
-          url: "/admin/services/refrigeration",
-        },
-      ],
     },
     {
       title: "Content",
@@ -157,47 +119,6 @@ const data: {
           url: "/admin/content/pages",
         },
       ],
-    },
-    {
-      title: "Analytics",
-      url: "/admin/analytics",
-      icon: BarChart3,
-    },
-    {
-      title: "Reports",
-      url: "/admin/reports",
-      icon: FileText,
-      items: [
-        {
-          title: "Dashboard",
-          url: "/admin/reports",
-        },
-        {
-          title: "Data Exports",
-          url: "/admin/reports?tab=exports",
-        },
-        {
-          title: "Scheduled Reports",
-          url: "/admin/reports?tab=scheduled",
-        },
-      ],
-    },
-    {
-      title: "Calendar",
-      url: "/admin/calendar",
-      icon: Calendar,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Settings",
-      url: "/admin/settings",
-      icon: Settings,
-    },
-    {
-      title: "Company Profile",
-      url: "/admin/company",
-      icon: Building2,
     },
   ],
 }
