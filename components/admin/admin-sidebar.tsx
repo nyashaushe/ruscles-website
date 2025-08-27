@@ -114,10 +114,6 @@ const data: {
           title: "Portfolio",
           url: "/admin/content/portfolio",
         },
-        {
-          title: "Pages",
-          url: "/admin/content/pages",
-        },
       ],
     },
   ],
@@ -183,7 +179,7 @@ const data: {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>System</SidebarGroupLabel>
+          {/* <SidebarGroupLabel>System</SidebarGroupLabel> */}
           <SidebarGroupContent>
             <SidebarMenu>
               {data.navSecondary.map((item) => (
@@ -226,10 +222,6 @@ const data: {
                 align="end"
                 sideOffset={4}
               >
-                <DropdownMenuItem>
-                  <User2 className="mr-2 size-4" />
-                  Account Settings
-                </DropdownMenuItem>
                 {/* Notifications link removed: page deleted */}
                 <DropdownMenuItem>
                   <LogOut className="mr-2 size-4" />
