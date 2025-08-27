@@ -75,19 +75,19 @@ export function ContactForm() {
           <p className="text-red-700 text-sm md:text-base">{error}</p>
         </div>
       )}
-      <form action={handleSubmit} className="space-y-4 md:space-y-6">
+  <form action={handleSubmit} className="space-y-4 md:space-y-6" autoComplete="on">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="firstName" className="text-sm md:text-base">
               First Name *
             </Label>
-            <Input id="firstName" name="firstName" required className="mt-1" />
+            <Input id="firstName" name="firstName" required className="mt-1" autoComplete="given-name" />
           </div>
         <div>
           <Label htmlFor="lastName" className="text-sm md:text-base">
             Last Name *
           </Label>
-          <Input id="lastName" name="lastName" required className="mt-1" />
+          <Input id="lastName" name="lastName" required className="mt-1" autoComplete="family-name" />
         </div>
       </div>
 
@@ -96,13 +96,13 @@ export function ContactForm() {
           <Label htmlFor="email" className="text-sm md:text-base">
             Email *
           </Label>
-          <Input id="email" name="email" type="email" required className="mt-1" />
+          <Input id="email" name="email" type="email" required className="mt-1" autoComplete="email" />
         </div>
         <div>
           <Label htmlFor="phone" className="text-sm md:text-base">
             Phone Number *
           </Label>
-          <Input id="phone" name="phone" type="tel" required className="mt-1" />
+          <Input id="phone" name="phone" type="tel" required className="mt-1" autoComplete="tel" />
         </div>
       </div>
 
@@ -153,6 +153,7 @@ export function ContactForm() {
           placeholder="Please describe your project or service needs in detail..."
           className="min-h-[100px] md:min-h-[120px] mt-1"
           required
+          autoComplete="off"
         />
       </div>
 
