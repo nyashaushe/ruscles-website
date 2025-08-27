@@ -160,7 +160,7 @@ export async function POST(request: NextRequest) {
                 formData: typeof formData === 'string' ? formData : JSON.stringify(formData),
                 priority,
                 status: 'NEW',
-                tags: []
+                tags: '[]'
             },
             include: {
                 assignedTo: {

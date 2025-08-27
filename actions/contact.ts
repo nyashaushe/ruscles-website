@@ -37,7 +37,7 @@ export async function submitContactForm(formData: FormData) {
 
 
     // Submit to the forms API
-  const response = await fetch('https://ruscleinvestments.co.zw/api/forms', {
+    const response = await fetch('/api/forms', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
