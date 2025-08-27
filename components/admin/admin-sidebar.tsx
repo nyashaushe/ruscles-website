@@ -308,12 +308,7 @@ export function AdminSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                   <User2 className="mr-2 size-4" />
                   Account Settings
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link href="/admin/settings/notifications">
-                    <Bell className="mr-2 size-4" />
-                    Notifications
-                  </Link>
-                </DropdownMenuItem>
+                {/* Notifications link removed: page deleted */}
                 <DropdownMenuItem>
                   <LogOut className="mr-2 size-4" />
                   Log out
