@@ -1,0 +1,6 @@
+# Development Environment Variables
+DATABASE_URL="postgres://neondb_owner:npg_TOuRFUkZ6b5e@ep-fragrant-dawn-adk6tkya-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require"
+NEXTAUTH_SECRET=your-super-secret-key-change-this-in-production
+NEXTAUTH_URL=http://localhost:3000
+ALLOWED_ADMIN_EMAILS=ruscleinvestments@gmail.com
+ALLOWED_GMAIL_DOMAINS=gmail.com
