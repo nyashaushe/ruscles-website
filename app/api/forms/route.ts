@@ -156,8 +156,8 @@ export async function POST(request: NextRequest) {
         const submission = await prisma.formSubmission.create({
             data: {
                 type,
-                customerInfo: JSON.stringify(customerInfo),
-                formData: JSON.stringify(formData),
+                customerInfo: typeof customerInfo === 'string' ? customerInfo : JSON.stringify(customerInfo),
+                formData: typeof formData === 'string' ? formData : JSON.stringify(formData),
                 priority,
                 status: 'NEW',
                 tags: []
