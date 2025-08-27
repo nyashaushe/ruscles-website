@@ -37,6 +37,7 @@ import {
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
+import { signOut } from "next-auth/react"
 
 type NavItem = {
   title: string
@@ -223,7 +224,7 @@ const data: {
                 sideOffset={4}
               >
                 {/* Notifications link removed: page deleted */}
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={() => signOut({ callbackUrl: "/" })}>
                   <LogOut className="mr-2 size-4" />
                   Log out
                 </DropdownMenuItem>
