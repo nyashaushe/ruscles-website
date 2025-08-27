@@ -29,7 +29,10 @@ export class FormsApi {
     const params: Record<string, any> = { page, limit }
     
     if (filters) {
-      if (filters.status?.length) params.status = filters.status.join(',')
+      if (filters.status?.length) {
+        // Map status values to uppercase for backend compatibility
+        params.status = filters.status.map(s => s.toUpperCase()).join(',');
+      }
       if (filters.priority?.length) params.priority = filters.priority.join(',')
       if (filters.type?.length) params.type = filters.type.join(',')
       if (filters.assignedTo) params.assignedTo = filters.assignedTo
