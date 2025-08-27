@@ -39,7 +39,7 @@ export function AdminHeader() {
       <SidebarTrigger className="-ml-1" />
       <Separator orientation="vertical" className="mr-2 h-4" />
 
-      {/* Search */}
+      {/* Search
       <div className="flex-1 max-w-md">
         <div className="relative">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
@@ -49,10 +49,10 @@ export function AdminHeader() {
             className="pl-8 bg-gray-50 border-gray-200"
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="flex items-center gap-2">
-        {/* Quick Add */}
+        {/* Quick Add
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button size="sm" className="gap-2">
@@ -68,10 +68,10 @@ export function AdminHeader() {
             <DropdownMenuItem>New Customer</DropdownMenuItem>
             <DropdownMenuItem>New Blog Post</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
 
         {/* Notifications */}
-        <NotificationCenter />
+        {/* <NotificationCenter /> */}
 
         {/* User Menu */}
         <DropdownMenu>

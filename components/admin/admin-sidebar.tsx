@@ -93,11 +93,11 @@ const data: {
         },
       ],
     },
-    {
-      title: "Customers",
-      url: "/admin/customers",
-      icon: Users,
-    },
+    // {
+    //   title: "Customers",
+    //   url: "/admin/customers",
+    //   icon: Users,
+    // },
     {
       title: "Content",
       url: "/admin/content",
@@ -133,7 +133,7 @@ const data: {
                   <Zap className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Ruscles Admin</span>
+                  <span className="truncate font-semibold">Ruscle Admin</span>
                   <span className="truncate text-xs">Management Portal</span>
                 </div>
               </Link>
