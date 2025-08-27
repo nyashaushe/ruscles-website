@@ -37,7 +37,7 @@ export async function submitContactForm(formData: FormData) {
 
 
     // Submit to the forms API
-    const response = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/forms`, {
+  const response = await fetch('https://ruscleinvestments.co.zw/api/forms', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
