@@ -98,25 +98,25 @@ const data: {
     //   url: "/admin/customers",
     //   icon: Users,
     // },
-    {
-      title: "Content",
-      url: "/admin/content",
-      icon: FileText,
-      items: [
-        {
-          title: "Blog Posts",
-          url: "/admin/content/blog",
-        },
-        {
-          title: "Testimonials",
-          url: "/admin/content/testimonials",
-        },
-        {
-          title: "Portfolio",
-          url: "/admin/content/portfolio",
-        },
-      ],
-    },
+    // {
+    //   title: "Content",
+    //   url: "/admin/content",
+    //   icon: FileText,
+    //   items: [
+    //     {
+    //       title: "Blog Posts",
+    //       url: "/admin/content/blog",
+    //     },
+    //     {
+    //       title: "Testimonials",
+    //       url: "/admin/content/testimonials",
+    //     },
+    //     {
+    //       title: "Portfolio",
+    //       url: "/admin/content/portfolio",
+    //     },
+    //   ],
+    // },
   ],
   navSecondary: [], // Ensure navSecondary is always defined as an empty array
 };
