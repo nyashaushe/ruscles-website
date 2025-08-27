@@ -19,12 +19,34 @@ export function ContactForm() {
     setError(null)
 
     try {
+      // Submit to admin API
       const result = await submitContactForm(formData)
-      if (result.success) {
-        setSubmitted(true)
-      } else {
+      if (!result.success) {
         setError(result.message || "Something went wrong. Please try again.")
+        setIsSubmitting(false)
+        return;
       }
+
+      // Send email via EmailJS (client-side only)
+      try {
+        const { sendContactEmail } = await import("@/lib/emailjs");
+        await sendContactEmail({
+          firstName: formData.get("firstName") as string,
+          lastName: formData.get("lastName") as string,
+          email: formData.get("email") as string,
+          phone: formData.get("phone") as string,
+          service: formData.get("service") as string,
+          propertyType: formData.get("propertyType") as string,
+          message: formData.get("message") as string,
+          timeline: formData.get("timeline") as string,
+          emergency: formData.get("emergency") === "on",
+        });
+      } catch (emailError) {
+        console.error("EmailJS error:", emailError);
+        // Optionally show a warning, but don't block success
+      }
+
+      setSubmitted(true)
     } catch (error) {
       console.error("Form submission error:", error)
       setError("Something went wrong. Please try again.")
