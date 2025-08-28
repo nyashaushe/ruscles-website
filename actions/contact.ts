@@ -1,5 +1,7 @@
 "use server"
 
+import { prisma } from '@/lib/db'
+
 export async function submitContactForm(formData: FormData) {
   try {
     const firstName = formData.get("firstName") as string
@@ -36,48 +38,19 @@ export async function submitContactForm(formData: FormData) {
     }
 
 
-    // Submit to the forms API
-    const response = await fetch('/api/forms', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    // Submit directly to database
+    const submission = await prisma.formSubmission.create({
+      data: {
         type: 'CONTACT',
-        customerInfo,
-        formData: formDataPayload,
+        customerInfo: JSON.stringify(customerInfo),
+        formData: JSON.stringify(formDataPayload),
         priority: emergency ? 'URGENT' : 'MEDIUM',
-      }),
+        status: 'NEW',
+        tags: '[]'
+      }
     })
 
-    if (!response.ok) {
-      throw new Error('Failed to submit form')
-    }
 
-    const result = await response.json()
-
-    if (!result.success) {
-      throw new Error(result.error || 'Failed to submit form')
-    }
-
-    // Send contact email via EmailJS (do not block success)
-    try {
-      const { sendContactEmail } = await import('@/lib/emailjs');
-      await sendContactEmail({
-        firstName,
-        lastName,
-        email,
-        phone,
-        service,
-        propertyType,
-        message,
-        timeline,
-        emergency,
-      });
-    } catch (emailError) {
-      console.error('EmailJS error:', emailError);
-      // Do not block user success if email fails
-    }
 
     return {
       success: true,
