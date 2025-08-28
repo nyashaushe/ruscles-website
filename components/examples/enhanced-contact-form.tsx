@@ -313,6 +313,7 @@ export function EnhancedContactForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="serviceType" className="required">Service Type</Label>
+                {/*
                 <Select
                   value={values.serviceType || ''}
                   onValueChange={(value) => setFieldValue('serviceType', value)}
@@ -327,6 +328,7 @@ export function EnhancedContactForm() {
                     <SelectItem value="general">General Inquiry</SelectItem>
                   </SelectContent>
                 </Select>
+                */}
                 {getFieldError('serviceType') && (
                   <p className="text-sm text-red-600 flex items-center gap-1">
                     <AlertCircle className="h-3 w-3" />
@@ -337,6 +339,7 @@ export function EnhancedContactForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="urgency">Urgency Level</Label>
+                {/*
                 <Select
                   value={values.urgency}
                   onValueChange={(value) => setFieldValue('urgency', value)}
@@ -351,6 +354,7 @@ export function EnhancedContactForm() {
                     <SelectItem value="urgent">Urgent</SelectItem>
                   </SelectContent>
                 </Select>
+                */}
                 <div className="flex items-center gap-2">
                   <Badge variant={getUrgencyColor(values.urgency) as any}>
                     {values.urgency} priority
@@ -402,6 +406,7 @@ export function EnhancedContactForm() {
             {/* Contact Preferences */}
             <div className="space-y-2">
               <Label htmlFor="preferredContact">Preferred Contact Method</Label>
+              {/*
               <Select
                 value={values.preferredContact}
                 onValueChange={(value) => setFieldValue('preferredContact', value)}
@@ -415,6 +420,7 @@ export function EnhancedContactForm() {
                   <SelectItem value="either">Either Email or Phone</SelectItem>
                 </SelectContent>
               </Select>
+              */}
             </div>
 
             {/* Newsletter Subscription */}

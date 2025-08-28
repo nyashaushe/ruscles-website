@@ -16,8 +16,8 @@ export default function AdminDashboard() {
     {
       title: "Total Submissions",
       value: dashboardStats?.combined.totalSubmissions.toString() || "0",
-      change: "+12%",
-      trend: "up",
+      // change: "+12%",
+      // trend: "up",
       icon: MessageSquare,
       description: "Forms & Inquiries",
       href: "/admin/forms"
@@ -25,8 +25,8 @@ export default function AdminDashboard() {
     {
       title: "Pending Items",
       value: dashboardStats?.combined.pendingItems.toString() || "0",
-      change: "+3",
-      trend: "up",
+      // change: "+3",
+      // trend: "up",
       icon: Clock,
       description: "Need attention",
       href: "/admin/forms?status=new"
@@ -34,8 +34,8 @@ export default function AdminDashboard() {
     {
       title: "Active Items",
       value: dashboardStats?.combined.activeItems.toString() || "0",
-      change: "+8%",
-      trend: "up",
+      // change: "+8%",
+      // trend: "up",
       icon: Wrench,
       description: "In progress",
       href: "/admin/forms?status=in_progress"
