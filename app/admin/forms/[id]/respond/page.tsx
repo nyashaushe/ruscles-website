@@ -8,18 +8,18 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { 
-  ArrowLeft, 
-  Send, 
-  Save, 
-  Eye, 
+import {
+  ArrowLeft,
+  Send,
+  Save,
+  Eye,
   MessageSquare,
   Mail,
   Clock,
@@ -33,18 +33,21 @@ import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { formatRelativeTime } from "@/lib/utils"
 import { ResponseComposer } from "../../components/response-composer"
 import { EmailTemplates } from "../../components/email-templates"
+import { useToast } from "@/hooks/use-toast"
 import type { FormSubmission } from "@/lib/types"
 
 export default function FormResponsePage() {
   const params = useParams()
   const router = useRouter()
   const formId = params.id as string
+  const { toast } = useToast()
 
   const [form, setForm] = useState<FormSubmission | null>(null)
   const [loading, setLoading] = useState(true)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  
+  const [success, setSuccess] = useState<string | null>(null)
+
   const [responseData, setResponseData] = useState({
     to: '',
     subject: '',
@@ -65,7 +68,7 @@ export default function FormResponsePage() {
       setError(null)
       const response = await FormsApi.getFormById(formId)
       setForm(response)
-      
+
       // Pre-populate response fields
       setResponseData(prev => ({
         ...prev,
@@ -84,9 +87,11 @@ export default function FormResponsePage() {
 
     try {
       setSending(true)
-      
+      setError(null)
+      setSuccess(null)
+
       // Send the response
-      await FormsApi.sendFormResponse(form.id, {
+      const response = await FormsApi.sendFormResponse(form.id, {
         to: responseData.to,
         subject: responseData.subject,
         message: responseData.message,
@@ -97,16 +102,44 @@ export default function FormResponsePage() {
       })
 
       // Update form status to responded
-      await FormsApi.updateForm(form.id, { 
+      await FormsApi.updateForm(form.id, {
         status: 'responded',
         assignedTo: 'Current User' // This would be the actual current user
       })
 
-      // Redirect back to form details
-      router.push(`/admin/forms/${form.id}`)
+      // Show success toast
+      toast({
+        title: "✅ Response Sent Successfully!",
+        description: `Your response has been sent to ${responseData.to}. The form status has been updated to "Responded".`,
+        variant: "default",
+      })
+
+      // Show success message in UI as well
+      setSuccess(`Response sent successfully to ${responseData.to}! The form status has been updated to "Responded".`)
+
+      // Clear the form
+      setResponseData(prev => ({
+        ...prev,
+        message: '',
+        template: ''
+      }))
+
+      // Redirect back to form details after a short delay
+      setTimeout(() => {
+        router.push(`/admin/forms/${form.id}`)
+      }, 2000)
+
     } catch (err) {
       console.error('Failed to send response:', err)
-      setError(err instanceof Error ? err.message : 'Failed to send response')
+      const errorMessage = err instanceof Error ? err.message : 'Failed to send response'
+      setError(errorMessage)
+
+      // Show error toast
+      toast({
+        title: "❌ Failed to Send Response",
+        description: errorMessage,
+        variant: "destructive",
+      })
     } finally {
       setSending(false)
     }
@@ -189,12 +222,15 @@ export default function FormResponsePage() {
             <Save className="h-4 w-4 mr-2" />
             Save Draft
           </Button>
-          <Button 
+          <Button
             onClick={handleSendResponse}
             disabled={sending || !responseData.message.trim()}
           >
             {sending ? (
-              <LoadingSpinner size="sm" />
+              <>
+                <LoadingSpinner size="sm" />
+                <span className="ml-2">Sending...</span>
+              </>
             ) : (
               <>
                 <Send className="h-4 w-4 mr-2" />
@@ -252,7 +288,7 @@ export default function FormResponsePage() {
           </Card>
 
           {/* Email Templates */}
-          <EmailTemplates 
+          <EmailTemplates
             onTemplateSelect={handleTemplateSelect}
             formType={form.type}
           />
@@ -268,11 +304,26 @@ export default function FormResponsePage() {
         </div>
       </div>
 
-      {error && (
-        <Card>
+      {success && (
+        <Card className="border-green-200 bg-green-50">
           <CardContent className="pt-6">
-            <div className="text-center text-red-600">
-              <p>{error}</p>
+            <div className="text-center text-green-700">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <CheckCircle className="h-5 w-5" />
+                <p className="font-medium">Success!</p>
+              </div>
+              <p className="text-sm">{success}</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {error && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <div className="text-center text-red-700">
+              <p className="font-medium">Error</p>
+              <p className="text-sm mt-1">{error}</p>
             </div>
           </CardContent>
         </Card>

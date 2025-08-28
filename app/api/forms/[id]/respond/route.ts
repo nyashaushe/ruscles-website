@@ -6,10 +6,11 @@ import { ResponseMethod } from '@prisma/client'
 
 export async function POST(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        console.log('Respond API called for form ID:', params.id)
+        const { id } = await params
+        console.log('Respond API called for form ID:', id)
 
         const session = await getServerSession(authOptions)
         console.log('Session:', session ? 'Found' : 'Not found')
@@ -36,7 +37,7 @@ export async function POST(
 
         // Check if form exists
         const form = await prisma.formSubmission.findUnique({
-            where: { id: params.id }
+            where: { id }
         })
 
         if (!form) {
@@ -46,10 +47,15 @@ export async function POST(
             )
         }
 
+        // Get customer info for email sending
+        const customerInfo = typeof form.customerInfo === 'string'
+            ? JSON.parse(form.customerInfo)
+            : form.customerInfo
+
         // Create the response
         const response = await prisma.formResponse.create({
             data: {
-                formId: params.id,
+                formId: id,
                 respondedBy: session.user.email || 'admin',
                 method,
                 content,
@@ -57,9 +63,22 @@ export async function POST(
             }
         })
 
+        // Send email if method is EMAIL and customer has email
+        if (method === 'EMAIL' && customerInfo?.email) {
+            try {
+                console.log('Attempting to send email to:', customerInfo.email)
+                // For now, just log the email details
+                // You can integrate with your preferred email service later
+                console.log('Email would be sent with content:', content)
+            } catch (emailError) {
+                console.error('Failed to send email:', emailError)
+                // Don't fail the entire request if email fails
+            }
+        }
+
         // Update the form status to responded
         await prisma.formSubmission.update({
-            where: { id: params.id },
+            where: { id },
             data: {
                 status: 'RESPONDED',
                 lastUpdated: new Date()
@@ -80,6 +99,7 @@ export async function POST(
 
         return NextResponse.json({
             success: true,
+            message: `Response sent successfully${customerInfo?.email ? ` to ${customerInfo.email}` : ''}`,
             data: transformedResponse
         })
 

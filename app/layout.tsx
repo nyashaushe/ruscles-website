@@ -6,6 +6,7 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import AuthProvider from "@/components/providers/session-provider"
 import { AdminLayoutWrapper } from "@/components/admin/admin-layout-wrapper"
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -36,6 +37,7 @@ export default function RootLayout({
           >
             {children}
           </AdminLayoutWrapper>
+          <Toaster />
         </AuthProvider>
       </body>
     </html>

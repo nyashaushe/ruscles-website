@@ -5,9 +5,10 @@ import { prisma } from '@/lib/db'
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params
         const session = await getServerSession(authOptions)
 
         if (!session?.user) {
@@ -15,7 +16,7 @@ export async function GET(
         }
 
         const submission = await prisma.formSubmission.findUnique({
-            where: { id: params.id },
+            where: { id },
             include: {
                 assignedTo: {
                     select: {
@@ -80,9 +81,10 @@ export async function GET(
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params
         const session = await getServerSession(authOptions)
 
         if (!session?.user) {
@@ -93,14 +95,17 @@ export async function PATCH(
         const { status, priority, assignedTo, notes, tags } = body
 
         const updateData: any = {}
-        if (status) updateData.status = status
+        if (status) updateData.status = status.toUpperCase()
         if (priority) updateData.priority = priority
-        if (assignedTo) updateData.assignedToId = assignedTo
+        if (assignedTo && assignedTo !== 'Current User') {
+            // Only set assignedToId if it's a valid user ID, not a placeholder
+            updateData.assignedToId = assignedTo
+        }
         if (notes !== undefined) updateData.notes = notes
         if (tags) updateData.tags = tags
 
         const submission = await prisma.formSubmission.update({
-            where: { id: params.id },
+            where: { id },
             data: updateData,
             include: {
                 assignedTo: {
@@ -160,9 +165,10 @@ export async function PATCH(
 
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
+        const { id } = await params
         const session = await getServerSession(authOptions)
 
         if (!session?.user) {
@@ -170,7 +176,7 @@ export async function DELETE(
         }
 
         await prisma.formSubmission.delete({
-            where: { id: params.id }
+            where: { id }
         })
 
         return NextResponse.json({ success: true })
