@@ -143,16 +143,6 @@ export default function FormsPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Form Submissions & Inquiries</h1>
           <p className="text-gray-600 mt-2">Manage and respond to all customer inquiries and form submissions</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-            className="gap-2"
-          >
-            <Filter className="h-4 w-4" />
-            Filters
-          </Button>
-        </div>
       </div>
 
       {/* Stats Cards */}
