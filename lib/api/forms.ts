@@ -121,10 +121,18 @@ export class FormsApi {
       sendCopy?: boolean
       scheduleFor?: Date | null
     }
-  ): Promise<void> {
-    await apiRequest(`/forms/${formId}/respond`, {
+  ): Promise<{ success: boolean; data: any }> {
+    const formData = new FormData()
+    formData.append('content', responseData.message)
+    formData.append('method', 'EMAIL')
+    if (responseData.scheduleFor) {
+      formData.append('scheduleFollowUp', responseData.scheduleFor.toISOString())
+    }
+
+    return apiRequest(`/forms/${formId}/respond`, {
       method: 'POST',
-      body: JSON.stringify(responseData),
+      body: formData,
+      headers: {}, // Let browser set Content-Type for FormData
     })
   }
 

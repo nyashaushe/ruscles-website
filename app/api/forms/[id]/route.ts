@@ -1,21 +1,6 @@
-export async function DELETE(
-    request: NextRequest,
-    { params }: { params: { id: string } }
-) {
-    try {
-        await prisma.formSubmission.delete({
-            where: { id: params.id }
-        });
-        return NextResponse.json({ success: true });
-    } catch (error) {
-        console.error('Error deleting form submission:', error);
-        return NextResponse.json(
-            { success: false, error: 'Failed to delete form submission' },
-            { status: 500 }
-        );
-    }
-}
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 
 export async function GET(
@@ -23,6 +8,12 @@ export async function GET(
     { params }: { params: { id: string } }
 ) {
     try {
+        const session = await getServerSession(authOptions)
+
+        if (!session?.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
         const submission = await prisma.formSubmission.findUnique({
             where: { id: params.id },
             include: {
@@ -34,16 +25,7 @@ export async function GET(
                     }
                 },
                 responses: {
-                    orderBy: { respondedAt: 'desc' },
-                    include: {
-                        user: {
-                            select: {
-                                id: true,
-                                name: true,
-                                email: true
-                            }
-                        }
-                    }
+                    orderBy: { respondedAt: 'desc' }
                 }
             }
         })
@@ -78,8 +60,7 @@ export async function GET(
                 method: response.method,
                 content: response.content,
                 attachments: response.attachments,
-                createdAt: response.createdAt.toISOString(),
-                user: response.user
+                createdAt: response.createdAt.toISOString()
             }))
         }
 
@@ -102,6 +83,12 @@ export async function PATCH(
     { params }: { params: { id: string } }
 ) {
     try {
+        const session = await getServerSession(authOptions)
+
+        if (!session?.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
         const body = await request.json()
         const { status, priority, assignedTo, notes, tags } = body
 
@@ -166,6 +153,31 @@ export async function PATCH(
         console.error('Error updating form submission:', error)
         return NextResponse.json(
             { success: false, error: 'Failed to update form submission' },
+            { status: 500 }
+        )
+    }
+}
+
+export async function DELETE(
+    request: NextRequest,
+    { params }: { params: { id: string } }
+) {
+    try {
+        const session = await getServerSession(authOptions)
+
+        if (!session?.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
+        await prisma.formSubmission.delete({
+            where: { id: params.id }
+        })
+
+        return NextResponse.json({ success: true })
+    } catch (error) {
+        console.error('Error deleting form submission:', error)
+        return NextResponse.json(
+            { success: false, error: 'Failed to delete form submission' },
             { status: 500 }
         )
     }

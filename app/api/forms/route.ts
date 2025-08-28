@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
             notes: submission.notes,
             lastUpdated: submission.lastUpdated.toISOString(),
             createdAt: submission.createdAt.toISOString(),
-            assignedTo: submission.assignedTo?.id,
+            assignedTo: submission.assignedToId,
             assignedToUser: submission.assignedTo,
             tags: submission.tags,
             responses: submission.responses.map(response => ({
@@ -170,7 +170,7 @@ export async function POST(request: NextRequest) {
                         email: true
                     }
                 },
-                responses: []
+                responses: true
             }
         })
 
@@ -186,7 +186,7 @@ export async function POST(request: NextRequest) {
             notes: submission.notes,
             lastUpdated: submission.lastUpdated.toISOString(),
             createdAt: submission.createdAt.toISOString(),
-            assignedTo: submission.assignedTo?.id,
+            assignedTo: submission.assignedToId,
             assignedToUser: submission.assignedTo,
             tags: submission.tags,
             responses: []

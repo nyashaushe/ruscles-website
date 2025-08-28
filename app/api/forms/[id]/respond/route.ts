@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import { ResponseMethod } from '@prisma/client'
 
@@ -7,46 +9,54 @@ export async function POST(
     { params }: { params: { id: string } }
 ) {
     try {
+        const session = await getServerSession(authOptions)
+
+        if (!session?.user) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+        }
+
         const formData = await request.formData()
         const content = formData.get('content') as string
-        const method = formData.get('method') as ResponseMethod
+        const method = (formData.get('method') as ResponseMethod) || 'EMAIL'
         const scheduleFollowUp = formData.get('scheduleFollowUp') as string
-        const attachments = formData.getAll('attachment_0') as File[]
 
-        if (!content || !method) {
+        if (!content) {
             return NextResponse.json(
-                { success: false, error: 'Content and method are required' },
+                { success: false, error: 'Content is required' },
                 { status: 400 }
             )
         }
 
-        // For now, we'll use a default user ID (you can implement authentication later)
-        const defaultUserId = 'cmeop3uel0000yfm0nbnggp0i' // This should come from auth
+        // Check if form exists
+        const form = await prisma.formSubmission.findUnique({
+            where: { id: params.id }
+        })
+
+        if (!form) {
+            return NextResponse.json(
+                { success: false, error: 'Form not found' },
+                { status: 404 }
+            )
+        }
 
         // Create the response
         const response = await prisma.formResponse.create({
             data: {
                 formId: params.id,
-                respondedBy: defaultUserId,
+                respondedBy: session.user.email || 'admin',
                 method,
                 content,
-                attachments: [], // You can implement file upload later
-            },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        name: true,
-                        email: true
-                    }
-                }
+                attachments: '[]', // File upload can be implemented later
             }
         })
 
         // Update the form status to responded
         await prisma.formSubmission.update({
             where: { id: params.id },
-            data: { status: 'RESPONDED' }
+            data: {
+                status: 'RESPONDED',
+                lastUpdated: new Date()
+            }
         })
 
         // Transform the response
@@ -58,8 +68,7 @@ export async function POST(
             method: response.method,
             content: response.content,
             attachments: response.attachments,
-            createdAt: response.createdAt.toISOString(),
-            user: response.user
+            createdAt: response.createdAt.toISOString()
         }
 
         return NextResponse.json({
