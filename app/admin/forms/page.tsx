@@ -34,11 +34,11 @@ export default function FormsPage() {
   const getFiltersForTab = (tab: string): FormFilters => {
     switch (tab) {
       case 'new':
-        return { status: ['new'] }
+        return { status: ['NEW'] }
       case 'in-progress':
-        return { status: ['in_progress'] }
+        return { status: ['IN_PROGRESS'] }
       case 'completed':
-        return { status: ['completed', 'responded'] }
+        return { status: ['COMPLETED', 'RESPONDED'] }
       default:
         return {}
     }

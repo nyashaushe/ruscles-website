@@ -33,11 +33,10 @@ export class FormsApi {
     limit: number = 20
   ): Promise<{ success: boolean; data: FormSubmission[]; pagination: any }> {
     const params: Record<string, any> = { page, limit }
-    
+
     if (filters) {
       if (filters.status?.length) {
-        // Map status values to uppercase for backend compatibility
-        params.status = filters.status.map(s => s.toUpperCase()).join(',');
+        params.status = filters.status.join(',');
       }
       if (filters.priority?.length) params.priority = filters.priority.join(',')
       if (filters.type?.length) params.type = filters.type.join(',')
@@ -92,11 +91,11 @@ export class FormsApi {
     const formData = new FormData()
     formData.append('content', responseData.content)
     formData.append('method', responseData.method)
-    
+
     if (responseData.scheduleFollowUp) {
       formData.append('scheduleFollowUp', responseData.scheduleFollowUp.toISOString())
     }
-    
+
     if (responseData.attachments?.length) {
       responseData.attachments.forEach((file, index) => {
         formData.append(`attachment_${index}`, file)

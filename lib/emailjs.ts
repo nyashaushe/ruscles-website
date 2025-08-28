@@ -23,25 +23,25 @@ export async function sendContactEmail(data: {
     fullName: `${data.firstName} ${data.lastName}`,
     email: data.email,
     phone: data.phone,
-    
+
     // Service Details
     service: data.service,
     serviceFormatted: formatServiceName(data.service),
     propertyType: data.propertyType || 'Not specified',
     propertyTypeFormatted: formatPropertyType(data.propertyType),
-    
+
     // Project Details
     message: data.message,
     timeline: data.timeline || 'Not specified',
     timelineFormatted: formatTimeline(data.timeline),
     emergency: data.emergency ? 'Yes' : 'No',
     emergencyFlag: data.emergency ? '🚨 URGENT' : '',
-    
+
     // Additional Information
     submissionDate: new Date().toLocaleDateString(),
     submissionTime: new Date().toLocaleTimeString(),
     priority: data.emergency ? 'URGENT' : 'MEDIUM',
-    
+
     // Formatted summary for email body
     customerSummary: `
 Customer: ${data.firstName} ${data.lastName}
@@ -54,7 +54,17 @@ Emergency: ${data.emergency ? 'YES - URGENT' : 'No'}
 
 Message:
 ${data.message}
-    `.trim()
+    `.trim(),
+
+    // Individual fields for easy template access
+    customerName: `${data.firstName} ${data.lastName}`,
+    customerEmail: data.email,
+    customerPhone: data.phone,
+    serviceRequested: formatServiceName(data.service),
+    propertyTypeRequested: formatPropertyType(data.propertyType),
+    timelineRequested: formatTimeline(data.timeline),
+    isEmergency: data.emergency,
+    customerMessage: data.message
   };
 
   return emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams, USER_ID);
