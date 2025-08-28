@@ -152,10 +152,6 @@ export default function FormsPage() {
             <Filter className="h-4 w-4" />
             Filters
           </Button>
-          <Button className="gap-2">
-            <Plus className="h-4 w-4" />
-            Manual Entry
-          </Button>
         </div>
       </div>
 
