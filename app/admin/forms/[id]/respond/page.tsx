@@ -90,7 +90,7 @@ export default function FormResponsePage() {
       setError(null)
       setSuccess(null)
 
-      // Send the response
+      // Send the response (this automatically updates the status to RESPONDED)
       const response = await FormsApi.sendFormResponse(form.id, {
         to: responseData.to,
         subject: responseData.subject,
@@ -101,11 +101,7 @@ export default function FormResponsePage() {
         scheduleFor: responseData.scheduleFor
       })
 
-      // Update form status to responded
-      await FormsApi.updateForm(form.id, {
-        status: 'responded',
-        assignedTo: 'Current User' // This would be the actual current user
-      })
+      // No need to update status again - it's already updated by the sendFormResponse call
 
       // Show success toast
       toast({
@@ -123,6 +119,11 @@ export default function FormResponsePage() {
         message: '',
         template: ''
       }))
+
+      // Redirect back to forms list after a short delay
+      setTimeout(() => {
+        router.push('/admin/forms')
+      }, 3000)
 
       // Redirect back to form details after a short delay
       setTimeout(() => {

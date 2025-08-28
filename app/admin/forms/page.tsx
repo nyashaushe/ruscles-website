@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { MessageSquare, Clock, CheckCircle, Plus, Filter, ArrowRight } from "lucide-react"
+import { MessageSquare, Clock, CheckCircle, Plus, Filter, ArrowRight, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { FormsTable } from "./components/forms-table"
 import { FormsFilters } from "./components/forms-filters"
@@ -54,6 +54,27 @@ export default function FormsPage() {
     setFilters(newFilters);
     updateFilters(newFilters);
   }, [searchParams]);
+
+  // Refresh forms when the page becomes visible (e.g., when navigating back)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        refreshForms();
+      }
+    };
+
+    const handleFocus = () => {
+      refreshForms();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [refreshForms]);
   const handleTabChange = (tab: string) => {
     setActiveTab(tab)
     const newFilters = getFiltersForTab(tab)
@@ -143,6 +164,24 @@ export default function FormsPage() {
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Form Submissions & Inquiries</h1>
           <p className="text-gray-600 mt-2">Manage and respond to all customer inquiries and form submissions</p>
         </div>
+        <Button
+          onClick={refreshForms}
+          variant="outline"
+          size="sm"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <Clock className="h-4 w-4 mr-2 animate-spin" />
+              Refreshing...
+            </>
+          ) : (
+            <>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Refresh
+            </>
+          )}
+        </Button>
       </div>
 
       {/* Stats Cards */}

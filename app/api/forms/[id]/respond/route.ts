@@ -77,12 +77,18 @@ export async function POST(
         }
 
         // Update the form status to responded
-        await prisma.formSubmission.update({
+        const updatedForm = await prisma.formSubmission.update({
             where: { id },
             data: {
                 status: 'RESPONDED',
                 lastUpdated: new Date()
             }
+        })
+
+        console.log('Form status updated successfully:', {
+            formId: id,
+            oldStatus: form.status,
+            newStatus: updatedForm.status
         })
 
         // Transform the response
