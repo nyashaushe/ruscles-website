@@ -71,7 +71,6 @@ model User {
   // Relations
   assignedForms     FormSubmission[] @relation("AssignedUser")
   authoredContent  ContentItem[]
-  formResponses    FormResponse[]
   notifications    Notification[]
   updatedPages     PageContent[]
   managedProjects  Project[]        @relation("ProjectManager")
@@ -190,7 +189,7 @@ enum FormPriority {
 model FormResponse {
   id           String       @id @default(cuid())
   formId       String
-  respondedBy  String
+  respondedBy  String       // Can be user ID or email/name
   respondedAt  DateTime     @default(now())
   method       ResponseMethod
   content      String
@@ -199,7 +198,6 @@ model FormResponse {
 
   // Relations
   form         FormSubmission @relation(fields: [formId], references: [id], onDelete: Cascade)
-  user         User          @relation(fields: [respondedBy], references: [id])
 
   @@map("form_responses")
 }

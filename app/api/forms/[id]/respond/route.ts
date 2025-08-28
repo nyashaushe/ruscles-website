@@ -9,9 +9,13 @@ export async function POST(
     { params }: { params: { id: string } }
 ) {
     try {
+        console.log('Respond API called for form ID:', params.id)
+
         const session = await getServerSession(authOptions)
+        console.log('Session:', session ? 'Found' : 'Not found')
 
         if (!session?.user) {
+            console.log('No session or user found')
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
@@ -20,7 +24,10 @@ export async function POST(
         const method = (formData.get('method') as ResponseMethod) || 'EMAIL'
         const scheduleFollowUp = formData.get('scheduleFollowUp') as string
 
+        console.log('Form data received:', { content: content ? 'Present' : 'Missing', method })
+
         if (!content) {
+            console.log('Content is missing')
             return NextResponse.json(
                 { success: false, error: 'Content is required' },
                 { status: 400 }
@@ -78,8 +85,9 @@ export async function POST(
 
     } catch (error) {
         console.error('Error sending response:', error)
+        console.error('Error details:', error instanceof Error ? error.message : String(error))
         return NextResponse.json(
-            { success: false, error: 'Failed to send response' },
+            { success: false, error: `Failed to send response: ${error instanceof Error ? error.message : String(error)}` },
             { status: 500 }
         )
     }
