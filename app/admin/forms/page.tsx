@@ -175,11 +175,11 @@ export default function FormsPage() {
         ))}
       </div>
 
-      {/* Filters */}
+      Filters
       {showFilters && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Filters</CardTitle>
+            {/* <CardTitle className="text-lg">Filters</CardTitle> */}
             <CardDescription>Filter forms by status, priority, type, and more</CardDescription>
           </CardHeader>
           <CardContent>

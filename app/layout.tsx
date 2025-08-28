@@ -10,7 +10,7 @@ import { AdminLayoutWrapper } from "@/components/admin/admin-layout-wrapper"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Ruscles Investments - Experts and Professionals in  Electrical & HVAC Services",
+  title: "Ruscle Investments - Experts and Professionals in  Electrical & HVAC Services",
   description:
     "Expert electrical wiring, repairs, air-conditioning, cold rooms, fridges, and freezer installation and repair services. Professional, reliable, satisfaction guaranteed.",
   keywords:

@@ -3,9 +3,9 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Users, Target, Award, Clock } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "About Us - Ruscles Investments",
+  title: "About Us - Ruscle Investments",
   description:
-    "Learn about Ruscles Investments, our history, team, and commitment to providing exceptional electrical and HVAC services.",
+    "Learn about Ruscle Investments, our history, team, and commitment to providing exceptional electrical and HVAC services.",
 }
 
 export default function AboutPage() {
@@ -41,7 +41,7 @@ export default function AboutPage() {
       <div className="container mx-auto px-4">
         {/* Hero Section */}
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">About Ruscles Investments</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">About Ruscle Investments</h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             Your trusted partner for professional electrical and HVAC services. We've been serving our community with
             dedication, expertise, and a commitment to excellence.
@@ -54,7 +54,7 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
             <div className="space-y-4 text-gray-600">
               <p>
-                Ruscles Investments was founded with a simple mission: to provide reliable, professional electrical and
+                Ruscle Investments was founded with a simple mission: to provide reliable, professional electrical and
                 HVAC services that our customers can depend on. What started as a small local business has grown into a
                 trusted name in the industry.
               </p>
