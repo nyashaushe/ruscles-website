@@ -21,6 +21,8 @@ export default function AdminLayout({
   useEffect(() => {
     if (status === "unauthenticated") {
       router.push("/auth/signin")
+    } else if (status === "authenticated" && window.location.pathname === "/admin") {
+      router.push("/admin/forms")
     }
   }, [status, router])
 
