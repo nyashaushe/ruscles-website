@@ -9,3 +9,4 @@ export function cn(...inputs: ClassValue[]) {
 export * from './utils/date'
 export * from './utils/formatting'
 export * from './utils/validation'
+export * from './utils/whatsapp'
