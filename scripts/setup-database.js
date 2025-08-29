@@ -15,13 +15,41 @@ if (!fs.existsSync(envPath)) {
     process.exit(1);
 }
 
-// Check if DATABASE_URL is set
+// Parse and validate environment variables
 const envContent = fs.readFileSync(envPath, 'utf8');
-if (!envContent.includes('DATABASE_URL=')) {
+const envVars = {};
+envContent.split('\n').forEach(line => {
+    const [key, ...valueParts] = line.split('=');
+    if (key && valueParts.length > 0) {
+        envVars[key.trim()] = valueParts.join('=').trim();
+    }
+});
+
+// Check if DATABASE_URL is set
+if (!envVars.DATABASE_URL) {
     console.log('❌ DATABASE_URL not found in .env.local!');
     console.log('Please add your database connection string to .env.local\n');
     process.exit(1);
 }
+
+// Validate authentication configuration
+console.log('🔐 Validating authentication configuration...');
+Object.keys(envVars).forEach(key => {
+    process.env[key] = envVars[key];
+});
+
+// Check for required authentication variables
+const requiredAuthVars = ['NEXTAUTH_SECRET', 'NEXTAUTH_URL', 'ALLOWED_ADMIN_EMAILS'];
+const missingAuthVars = requiredAuthVars.filter(varName => !envVars[varName]);
+
+if (missingAuthVars.length > 0) {
+    console.log('❌ Missing required authentication variables:', missingAuthVars);
+    console.log('Please add these to your .env.local file.');
+    console.log('See .env.example for reference.\n');
+    process.exit(1);
+}
+
+console.log('✅ Authentication configuration looks good!');
 
 try {
     console.log('📦 Installing dependencies...');
