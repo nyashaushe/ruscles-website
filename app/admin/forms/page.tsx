@@ -10,6 +10,7 @@ import { MessageSquare, Clock, CheckCircle, Plus, Filter, ArrowRight, RefreshCw 
 import Link from "next/link"
 import { FormsTable } from "./components/forms-table"
 import { FormsFilters } from "./components/forms-filters"
+import { MobileSearchFilter } from "./components/mobile-search-filter"
 import { useForms, useFormStats } from "@/hooks/use-forms"
 import { FormsApi } from "@/lib/api/forms"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
@@ -158,47 +159,56 @@ export default function FormsPage() {
   }
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Form Submissions & Inquiries</h1>
-          <p className="text-gray-600 mt-2">Manage and respond to all customer inquiries and form submissions</p>
+      {/* Header - Mobile Optimized */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 truncate">
+            Form Submissions & Inquiries
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
+            Manage and respond to all customer inquiries and form submissions
+          </p>
         </div>
-        <Button
-          onClick={refreshForms}
-          variant="outline"
-          size="sm"
-          disabled={loading}
-        >
-          {loading ? (
-            <>
-              <Clock className="h-4 w-4 mr-2 animate-spin" />
-              Refreshing...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
-            </>
-          )}
-        </Button>
+        <div className="flex-shrink-0">
+          <Button
+            onClick={refreshForms}
+            variant="outline"
+            size="sm"
+            disabled={loading}
+            className="w-full sm:w-auto touch-manipulation"
+          >
+            {loading ? (
+              <>
+                <Clock className="h-4 w-4 mr-2 animate-spin" />
+                <span className="hidden sm:inline">Refreshing...</span>
+                <span className="sm:hidden">Refresh</span>
+              </>
+            ) : (
+              <>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">Refresh</span>
+                <span className="sm:hidden">Refresh</span>
+              </>
+            )}
+          </Button>
+        </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Stats Cards - Mobile Optimized */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {statsCards.map((stat, index) => (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">
+          <Card key={index} className="hover:shadow-md transition-shadow">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 px-3 sm:px-6 pt-3 sm:pt-6">
+              <CardTitle className="text-xs sm:text-sm font-medium text-gray-600 truncate">
                 {stat.title}
               </CardTitle>
-              <stat.icon className={`h-4 w-4 ${stat.color || 'text-gray-400'}`} />
+              <stat.icon className={`h-3 w-3 sm:h-4 sm:w-4 flex-shrink-0 ${stat.color || 'text-gray-400'}`} />
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900">
+            <CardContent className="px-3 sm:px-6 pb-3 sm:pb-6">
+              <div className="text-lg sm:text-2xl font-bold text-gray-900">
                 {statsLoading ? <LoadingSpinner size="sm" /> : stat.value}
               </div>
-              <p className="text-xs text-gray-600 mt-1">{stat.description}</p>
+              <p className="text-xs text-gray-600 mt-1 leading-tight">{stat.description}</p>
             </CardContent>
           </Card>
         ))}
@@ -221,56 +231,74 @@ export default function FormsPage() {
         </Card>
       )} */}
 
-      {/* Forms Table */}
+      {/* Forms Table - Mobile Optimized */}
       <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Form Submissions</CardTitle>
-              <CardDescription>
+        <CardHeader className="px-4 sm:px-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <CardTitle className="text-lg sm:text-xl">Form Submissions</CardTitle>
+              <CardDescription className="text-sm">
                 {pagination.total} total submissions
                 {filters.search && ` matching "${filters.search}"`}
               </CardDescription>
             </div>
-            <Tabs value={activeTab} onValueChange={handleTabChange}>
-              <TabsList>
-                <TabsTrigger value="all">
-                  All
-                  {stats?.total && (
-                    <Badge variant="secondary" className="ml-2">
-                      {stats.total}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger value="new">
-                  New
-                  {stats?.byStatus?.new && (
-                    <Badge variant="secondary" className="ml-2">
-                      {stats.byStatus.new}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger value="in-progress">
-                  In Progress
-                  {stats?.byStatus?.in_progress && (
-                    <Badge variant="secondary" className="ml-2">
-                      {stats.byStatus.in_progress}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-                <TabsTrigger value="completed">
-                  Completed
-                  {((stats?.byStatus?.completed || 0) + (stats?.byStatus?.responded || 0)) > 0 && (
-                    <Badge variant="secondary" className="ml-2">
-                      {(stats?.byStatus?.completed || 0) + (stats?.byStatus?.responded || 0)}
-                    </Badge>
-                  )}
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+
+            {/* Mobile-First Tabs */}
+            <div className="w-full sm:w-auto">
+              <Tabs value={activeTab} onValueChange={handleTabChange}>
+                <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 sm:w-auto">
+                  <TabsTrigger value="all" className="text-xs sm:text-sm px-2 sm:px-3">
+                    <span className="hidden sm:inline">All</span>
+                    <span className="sm:hidden">All</span>
+                    {stats?.total && (
+                      <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs px-1">
+                        {stats.total}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="new" className="text-xs sm:text-sm px-2 sm:px-3">
+                    <span className="hidden sm:inline">New</span>
+                    <span className="sm:hidden">New</span>
+                    {stats?.byStatus?.new && (
+                      <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs px-1">
+                        {stats.byStatus.new}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="in-progress" className="text-xs sm:text-sm px-2 sm:px-3">
+                    <span className="hidden sm:inline">In Progress</span>
+                    <span className="sm:hidden">Progress</span>
+                    {stats?.byStatus?.in_progress && (
+                      <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs px-1">
+                        {stats.byStatus.in_progress}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
+                  <TabsTrigger value="completed" className="text-xs sm:text-sm px-2 sm:px-3">
+                    <span className="hidden sm:inline">Completed</span>
+                    <span className="sm:hidden">Done</span>
+                    {((stats?.byStatus?.completed || 0) + (stats?.byStatus?.responded || 0)) > 0 && (
+                      <Badge variant="secondary" className="ml-1 sm:ml-2 text-xs px-1">
+                        {(stats?.byStatus?.completed || 0) + (stats?.byStatus?.responded || 0)}
+                      </Badge>
+                    )}
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="px-4 sm:px-6">
+          {/* Mobile Search and Filters */}
+          <div className="md:hidden mb-4">
+            <MobileSearchFilter
+              filters={filters}
+              onFiltersChange={handleFiltersChange}
+              onClearFilters={handleClearFilters}
+              totalResults={pagination.total}
+            />
+          </div>
+
           <FormsTable
             forms={forms}
             loading={loading}

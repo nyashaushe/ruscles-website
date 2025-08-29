@@ -6,14 +6,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { 
-  ArrowLeft, 
-  MessageSquare, 
-  User, 
-  Clock, 
-  Mail, 
-  Phone, 
-  Building, 
+import {
+  ArrowLeft,
+  MessageSquare,
+  User,
+  Clock,
+  Mail,
+  Phone,
+  Building,
   Calendar,
   AlertCircle,
   CheckCircle,
@@ -123,44 +123,51 @@ export default function FormDetailPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" asChild>
+      {/* Header - Mobile Optimized */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Button variant="ghost" size="sm" asChild className="touch-manipulation">
             <Link href="/admin/forms">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Forms
+              <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Back to Forms</span>
+              <span className="sm:hidden">Back</span>
             </Link>
           </Button>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900 truncate">
               Form Submission Details
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-sm sm:text-base text-gray-600 mt-1">
               Submitted {formatRelativeTime(form.submittedAt)}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-          <Button variant="outline" size="sm">
-            <Archive className="h-4 w-4 mr-2" />
-            Archive
-          </Button>
-          <Button size="sm" asChild>
+
+        {/* Action Buttons - Mobile Stack */}
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
+          <Button size="sm" asChild className="touch-manipulation">
             <Link href={`/admin/forms/${form.id}/respond`}>
               <MessageSquare className="h-4 w-4 mr-2" />
               Respond
             </Link>
           </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="flex-1 sm:flex-none touch-manipulation">
+              <Download className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Export</span>
+              <span className="sm:hidden">Export</span>
+            </Button>
+            <Button variant="outline" size="sm" className="flex-1 sm:flex-none touch-manipulation">
+              <Archive className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Archive</span>
+              <span className="sm:hidden">Archive</span>
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Status and Priority Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Status and Priority Cards - Mobile Optimized */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-600">Status</CardTitle>
@@ -174,7 +181,7 @@ export default function FormDetailPage() {
                 size="sm"
                 onClick={() => handleStatusUpdate(
                   form.status === 'new' ? 'in_progress' :
-                  form.status === 'in_progress' ? 'completed' : 'new'
+                    form.status === 'in_progress' ? 'completed' : 'new'
                 )}
                 disabled={updating}
                 className="text-xs"
@@ -194,8 +201,8 @@ export default function FormDetailPage() {
             <PriorityBadge priority={form.priority} />
             <p className="text-xs text-gray-600 mt-1">
               {form.priority === 'urgent' ? 'Requires immediate attention' :
-               form.priority === 'high' ? 'High priority inquiry' :
-               form.priority === 'medium' ? 'Standard priority' : 'Low priority'}
+                form.priority === 'high' ? 'High priority inquiry' :
+                  form.priority === 'medium' ? 'Standard priority' : 'Low priority'}
             </p>
           </CardContent>
         </Card>
@@ -277,7 +284,7 @@ export default function FormDetailPage() {
                   <label className="text-sm font-medium text-gray-600">Email</label>
                   <div className="flex items-center gap-2">
                     <Mail className="h-4 w-4 text-gray-400" />
-                    <a 
+                    <a
                       href={`mailto:${form.customerInfo.email}`}
                       className="text-blue-600 hover:underline"
                     >
@@ -290,7 +297,7 @@ export default function FormDetailPage() {
                     <label className="text-sm font-medium text-gray-600">Phone</label>
                     <div className="flex items-center gap-2">
                       <Phone className="h-4 w-4 text-gray-400" />
-                      <a 
+                      <a
                         href={`tel:${form.customerInfo.phone}`}
                         className="text-blue-600 hover:underline"
                       >

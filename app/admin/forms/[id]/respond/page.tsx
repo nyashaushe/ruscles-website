@@ -200,32 +200,32 @@ export default function FormResponsePage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" asChild>
+      {/* Header - Mobile Optimized */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2 sm:gap-4">
+          <Button variant="ghost" size="sm" asChild className="touch-manipulation">
             <Link href={`/admin/forms/${form.id}`}>
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Details
+              <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Back to Details</span>
+              <span className="sm:hidden">Back</span>
             </Link>
           </Button>
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+          <div className="min-w-0 flex-1">
+            <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-gray-900 truncate">
               Respond to Form
             </h1>
-            <p className="text-gray-600 mt-1">
+            <p className="text-sm sm:text-base text-gray-600 mt-1 truncate">
               Responding to {form.customerInfo.name}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={handleSaveDraft}>
-            <Save className="h-4 w-4 mr-2" />
-            Save Draft
-          </Button>
+
+        {/* Action Buttons - Mobile Stack */}
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
           <Button
             onClick={handleSendResponse}
             disabled={sending || !responseData.message.trim()}
+            className="touch-manipulation"
           >
             {sending ? (
               <>
@@ -239,10 +239,15 @@ export default function FormResponsePage() {
               </>
             )}
           </Button>
+          <Button variant="outline" onClick={handleSaveDraft} className="touch-manipulation">
+            <Save className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">Save Draft</span>
+            <span className="sm:hidden">Save</span>
+          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
         {/* Original Form Content */}
         <div className="lg:col-span-1 space-y-4">
           <Card>
