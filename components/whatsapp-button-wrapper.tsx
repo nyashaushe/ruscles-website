@@ -1,6 +1,6 @@
 /**
- * Server-side WhatsApp Button wrapper
- * Safely loads environment configuration and provides fallbacks
+ * WhatsApp Button with hardcoded configuration
+ * This ensures the button always works with your business details
  */
 
 import { WhatsAppButton } from './whatsapp-button';
@@ -14,26 +14,27 @@ export function WhatsAppButtonWrapper({
     position = 'bottom-right',
     className
 }: WhatsAppButtonWrapperProps) {
-    // Get configuration from environment variables directly on the server side
-    const phoneNumber = process.env.WHATSAPP_BUSINESS_NUMBER;
-    const defaultMessage = process.env.WHATSAPP_DEFAULT_MESSAGE || "Hello! I'm interested in your investment services. Could you please provide more information?";
-    const businessName = process.env.WHATSAPP_BUSINESS_NAME || 'Ruscle Investments';
-    const enabled = process.env.WHATSAPP_ENABLED !== 'false';
+    // Your actual WhatsApp business configuration
+    const config = {
+        phoneNumber: '+263732591600', // Your actual WhatsApp number
+        defaultMessage: "Hello! I'm interested in your investment services. Could you please provide more information?",
+        businessName: 'Ruscle Investments',
+        enabled: true
+    };
 
-    // Don't render if disabled or no phone number
-    if (!enabled || !phoneNumber) {
-        console.warn('WhatsApp button disabled: missing configuration or explicitly disabled');
+    // Don't render if disabled
+    if (!config.enabled) {
         return null;
     }
 
     return (
         <WhatsAppButton
-            phoneNumber={phoneNumber}
-            message={defaultMessage}
+            phoneNumber={config.phoneNumber}
+            message={config.defaultMessage}
             position={position}
             className={className}
             useEnvConfig={false} // We're providing the config directly
-            ariaLabel={`Contact ${businessName} on WhatsApp`}
+            ariaLabel={`Contact ${config.businessName} on WhatsApp`}
         />
     );
 }
