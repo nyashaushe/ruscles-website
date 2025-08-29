@@ -45,7 +45,7 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplate> = {
     `,
     variables: ['formType', 'customerName', 'customerEmail', 'customerPhone', 'serviceType', 'customerMessage', 'adminUrl', 'formId', 'submissionDate', 'submissionTime']
   },
-  
+
   urgent_inquiry: {
     id: 'urgent_inquiry',
     name: 'Urgent Inquiry Alert',
@@ -78,7 +78,7 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplate> = {
     `,
     variables: ['customerName', 'customerEmail', 'customerPhone', 'serviceType', 'customerMessage', 'adminUrl', 'formId', 'submissionDate', 'submissionTime']
   },
-  
+
   follow_up_reminder: {
     id: 'follow_up_reminder',
     name: 'Follow-up Reminder',
@@ -108,7 +108,7 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplate> = {
     `,
     variables: ['customerName', 'customerEmail', 'customerPhone', 'serviceType', 'originalDate', 'customerMessage', 'followUpNotes', 'adminUrl', 'formId', 'reminderDate']
   },
-  
+
   content_published: {
     id: 'content_published',
     name: 'Content Published',
@@ -131,7 +131,7 @@ export const EMAIL_TEMPLATES: Record<string, EmailTemplate> = {
     `,
     variables: ['contentTitle', 'contentType', 'publishDate', 'authorName', 'contentUrl', 'adminUrl', 'contentId']
   },
-  
+
   spam_detected: {
     id: 'spam_detected',
     name: 'Spam Detected',
@@ -238,7 +238,7 @@ class EmailNotificationService {
     }
 
     // Get admin email addresses (this would typically come from settings)
-    const adminEmails = process.env.ADMIN_EMAIL_ADDRESSES?.split(',') || ['admin@rusclesinvestments.com']
+    const adminEmails = process.env.ADMIN_EMAIL_ADDRESSES?.split(',') || ['admin@ruscleinvestments.com']
 
     await this.sendTemplatedEmail(templateId, adminEmails, variables, priority)
   }
@@ -268,7 +268,7 @@ class EmailNotificationService {
       reminderDate: reminderData.reminderDate.toLocaleDateString()
     }
 
-    const adminEmails = process.env.ADMIN_EMAIL_ADDRESSES?.split(',') || ['admin@rusclesinvestments.com']
+    const adminEmails = process.env.ADMIN_EMAIL_ADDRESSES?.split(',') || ['admin@ruscleinvestments.com']
     await this.sendTemplatedEmail('follow_up_reminder', adminEmails, variables, 'medium')
   }
 
@@ -291,7 +291,7 @@ class EmailNotificationService {
       contentId: contentData.contentId
     }
 
-    const adminEmails = process.env.ADMIN_EMAIL_ADDRESSES?.split(',') || ['admin@rusclesinvestments.com']
+    const adminEmails = process.env.ADMIN_EMAIL_ADDRESSES?.split(',') || ['admin@ruscleinvestments.com']
     await this.sendTemplatedEmail('content_published', adminEmails, variables, 'low')
   }
 
@@ -317,7 +317,7 @@ class EmailNotificationService {
       adminUrl: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
     }
 
-    const adminEmails = process.env.ADMIN_EMAIL_ADDRESSES?.split(',') || ['admin@rusclesinvestments.com']
+    const adminEmails = process.env.ADMIN_EMAIL_ADDRESSES?.split(',') || ['admin@ruscleinvestments.com']
     await this.sendTemplatedEmail('spam_detected', adminEmails, variables, 'medium')
   }
 

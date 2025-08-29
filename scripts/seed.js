@@ -8,10 +8,10 @@ async function main() {
     try {
         // Create default admin user
         const adminUser = await prisma.user.upsert({
-            where: { email: 'admin@ruscles.com' },
+            where: { email: 'admin@ruscle.com' },
             update: {},
             create: {
-                email: 'admin@ruscles.com',
+                email: 'admin@ruscle.com',
                 name: 'Admin User',
                 role: 'ADMIN',
                 isActive: true,
@@ -26,17 +26,17 @@ async function main() {
             update: {},
             create: {
                 id: 'default',
-                companyName: 'Ruscles Investments',
+                companyName: 'Ruscle Investments',
                 tagline: 'Your Trusted Service Partner',
                 description: 'Professional electrical, HVAC, and refrigeration services for residential, commercial, and industrial clients in Zimbabwe.',
-                email: 'info@rusclesinvestments.com',
+                email: 'info@ruscleinvestments.com',
                 phone: '+263 732 591 600',
                 address: '112 2nd Street Parktown Waterfalls Harare',
-                website: 'https://rusclesinvestments.com',
+                website: 'https://ruscleinvestments.com',
                 socialMedia: {
-                    facebook: 'https://facebook.com/rusclesinvestments',
-                    twitter: 'https://twitter.com/ruscles',
-                    linkedin: 'https://linkedin.com/company/rusclesinvestments',
+                    facebook: 'https://facebook.com/ruscleinvestments',
+                    twitter: 'https://twitter.com/ruscle',
+                    linkedin: 'https://linkedin.com/company/ruscleinvestments',
                 },
                 businessHours: {
                     weekdays: '8:00 AM - 6:00 PM',
@@ -56,8 +56,8 @@ async function main() {
 
         // Create default settings
         const defaultSettings = [
-            { key: 'site_title', value: 'Ruscles Investments - Professional Services', description: 'Website title' },
-            { key: 'contact_email', value: 'info@rusclesinvestments.com', description: 'Primary contact email' },
+            { key: 'site_title', value: 'Ruscle Investments - Professional Services', description: 'Website title' },
+            { key: 'contact_email', value: 'info@ruscleinvestments.com', description: 'Primary contact email' },
             { key: 'business_hours', value: 'Monday-Friday: 8AM-6PM, Saturday: 9AM-4PM', description: 'Business hours' },
             { key: 'emergency_contact', value: '+263 732 591 600', description: 'Emergency contact number' },
             { key: 'timezone', value: 'Africa/Harare', description: 'Business timezone' },
@@ -84,7 +84,7 @@ async function main() {
                 customerName: 'John Smith',
                 customerTitle: 'Property Manager',
                 customerCompany: 'Smith Properties Ltd',
-                testimonialText: 'Ruscles provided excellent electrical services for our commercial building. Professional, reliable, and completed the work on time.',
+                testimonialText: 'Ruscle provided excellent electrical services for our commercial building. Professional, reliable, and completed the work on time.',
                 rating: 5,
                 projectType: 'Commercial Electrical',
                 isVisible: true,
@@ -195,7 +195,7 @@ async function main() {
             <li>Better indoor air quality</li>
             <li>Reduced repair costs</li>
           </ul>
-          <p>At Ruscles, we recommend scheduling maintenance at least twice a year to keep your system running smoothly.</p>
+          <p>At Ruscle, we recommend scheduling maintenance at least twice a year to keep your system running smoothly.</p>
         `,
                 excerpt: 'Learn why regular HVAC maintenance is essential for your system\'s performance and longevity.',
                 status: 'PUBLISHED',
@@ -204,7 +204,7 @@ async function main() {
                 tags: ['hvac', 'maintenance', 'energy-efficiency'],
                 categories: ['service-tips'],
                 featuredImage: '/images/blog/hvac-maintenance.jpg',
-                seoTitle: 'HVAC Maintenance Guide - Ruscles Investments',
+                seoTitle: 'HVAC Maintenance Guide - Ruscle Investments',
                 seoDescription: 'Discover the importance of regular HVAC maintenance and how it can save you money in the long run.',
             },
             {
@@ -229,7 +229,7 @@ async function main() {
                 tags: ['electrical', 'safety', 'homeowner-tips'],
                 categories: ['safety-guides'],
                 featuredImage: '/images/blog/electrical-safety.jpg',
-                seoTitle: 'Electrical Safety Guide for Homeowners - Ruscles',
+                seoTitle: 'Electrical Safety Guide for Homeowners - Ruscle',
                 seoDescription: 'Learn essential electrical safety tips to keep your home and family safe from electrical hazards.',
             },
         ];
@@ -257,8 +257,8 @@ async function main() {
                 slug: 'about',
                 title: 'About Us',
                 content: `
-          <h1>About Ruscles Investments</h1>
-          <p>Ruscles Investments is a leading provider of professional electrical, HVAC, and refrigeration services in Zimbabwe. With years of experience and a commitment to excellence, we deliver reliable solutions for residential, commercial, and industrial clients.</p>
+          <h1>About Ruscle Investments</h1>
+          <p>Ruscle Investments is a leading provider of professional electrical, HVAC, and refrigeration services in Zimbabwe. With years of experience and a commitment to excellence, we deliver reliable solutions for residential, commercial, and industrial clients.</p>
           <h2>Our Mission</h2>
           <p>To provide high-quality, reliable, and innovative solutions that exceed customer expectations while maintaining the highest standards of safety and professionalism.</p>
           <h2>Our Values</h2>
@@ -269,8 +269,8 @@ async function main() {
             <li>Innovation and technology</li>
           </ul>
         `,
-                metaTitle: 'About Ruscles Investments - Professional Services',
-                metaDescription: 'Learn about Ruscles Investments, your trusted partner for electrical, HVAC, and refrigeration services in Zimbabwe.',
+                metaTitle: 'About Ruscle Investments - Professional Services',
+                metaDescription: 'Learn about Ruscle Investments, your trusted partner for electrical, HVAC, and refrigeration services in Zimbabwe.',
                 updatedBy: adminUser.id,
             },
             {
@@ -278,7 +278,7 @@ async function main() {
                 title: 'Our Services',
                 content: `
           <h1>Our Services</h1>
-          <p>Ruscles Investments offers comprehensive solutions across three main service areas:</p>
+          <p>Ruscle Investments offers comprehensive solutions across three main service areas:</p>
           <h2>Electrical Services</h2>
           <p>From residential wiring to complex industrial electrical systems, we handle all your electrical needs with precision and safety.</p>
           <h2>HVAC Services</h2>
@@ -286,7 +286,7 @@ async function main() {
           <h2>Refrigeration Services</h2>
           <p>Commercial and industrial refrigeration systems that keep your business running smoothly.</p>
         `,
-                metaTitle: 'Services - Ruscles Investments',
+                metaTitle: 'Services - Ruscle Investments',
                 metaDescription: 'Comprehensive electrical, HVAC, and refrigeration services for residential, commercial, and industrial clients.',
                 updatedBy: adminUser.id,
             },

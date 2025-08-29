@@ -13,14 +13,14 @@ export function Footer() {
               <div className="relative">
                 <Image
                   src="/images/modern-logo.png"
-                  alt="Ruscles Investments"
+                  alt="Ruscle Investments"
                   width={60}
                   height={45}
                   className="h-10 md:h-12 w-auto drop-shadow-lg"
                 />
               </div>
               <div>
-                <h3 className="text-lg md:text-xl font-bold text-white">Ruscles Investments</h3>
+                <h3 className="text-lg md:text-xl font-bold text-white">Ruscle Investments</h3>
                 <p className="text-xs md:text-sm text-orange-400 font-semibold">SATISFACTION GUARANTEED</p>
               </div>
             </div>
@@ -117,7 +117,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-6 md:mt-8 pt-6 md:pt-8 text-center text-xs md:text-sm text-gray-400">
-          <p>&copy; 2024 Ruscles Investments. All rights reserved.</p>
+          <p>&copy; 2024 Ruscle Investments. All rights reserved.</p>
         </div>
       </div>
     </footer>

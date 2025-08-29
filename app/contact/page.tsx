@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Phone, Mail, MapPin, Clock } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Contact Us - Ruscles Investments",
+  title: "Contact Us - Ruscle Investments",
   description:
     "Get in touch with Ruscles Investments for professional electrical and HVAC services. Free quotes and 24/7 emergency service available.",
 }

@@ -1,7 +1,7 @@
 # 🖼️ Portfolio & Blog Image Updates Summary
 
 ## Overview
-Updated all placeholder images in the portfolio and blog sections with relevant, high-quality images from Unsplash that match the context of Ruscles Investments' electrical and HVAC services.
+Updated all placeholder images in the portfolio and blog sections with relevant, high-quality images from Unsplash that match the context of Ruscle Investments' electrical and HVAC services.
 
 ## ✅ Portfolio Page Updates (`app/portfolio/page.tsx`)
 
@@ -85,7 +85,7 @@ All images were carefully selected based on:
 
 1. **Relevance**: Each image directly relates to the specific service or topic
 2. **Professional Quality**: High-resolution, professional photography from Unsplash
-3. **Brand Consistency**: Images that reflect the professional, modern brand of Ruscles Investments
+3. **Brand Consistency**: Images that reflect the professional, modern brand of Ruscle Investments
 4. **Technical Accuracy**: Images showing actual electrical and HVAC equipment/installations
 5. **Visual Appeal**: Engaging, well-composed images that enhance user experience
 
@@ -124,7 +124,7 @@ The new images provide:
 - **Clear context** for each service and article
 - **Visual consistency** across the entire site
 - **Enhanced user engagement** through relevant imagery
-- **Better brand representation** of Ruscles Investments' expertise
+- **Better brand representation** of Ruscle Investments' expertise
 
 ## 🎉 Result
 
@@ -133,6 +133,6 @@ The portfolio and blog sections now feature:
 - ✅ Professional, high-quality photography
 - ✅ Consistent visual branding
 - ✅ Improved user experience and engagement
-- ✅ Better representation of Ruscles Investments' services
+- ✅ Better representation of Ruscle Investments' services
 
 All images are now production-ready and will significantly enhance the visual appeal and professionalism of the website!

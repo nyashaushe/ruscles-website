@@ -6,7 +6,7 @@ import { Calendar, MapPin, Users, CheckCircle } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Portfolio & Case Studies - Ruscles Investments",
+  title: "Portfolio & Case Studies - Ruscle Investments",
   description:
     "View our portfolio of successful electrical and HVAC projects. Case studies showcasing our expertise in residential and commercial installations.",
 }
@@ -296,7 +296,7 @@ export default function PortfolioPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="bg-white p-6 rounded-lg">
               <p className="text-gray-600 italic mb-4">
-                "Ruscles Investments transformed our restaurant's HVAC system. The improvement in kitchen conditions and
+                "Ruscle Investments transformed our restaurant's HVAC system. The improvement in kitchen conditions and
                 energy savings exceeded our expectations. Professional service from start to finish."
               </p>
               <div className="font-semibold">- Maria Santos, Bella Vista Restaurant</div>

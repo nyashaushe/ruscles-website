@@ -49,7 +49,7 @@ export function Navbar() {
               <div className="relative">
                 <Image
                   src="/images/modern-logo.png"
-                  alt="Ruscles Investments - Professional Electrical & HVAC Services"
+                  alt="Ruscle Investments - Professional Electrical & HVAC Services"
                   width={80}
                   height={60}
                   className="h-12 md:h-16 w-auto drop-shadow-lg"
@@ -58,7 +58,7 @@ export function Navbar() {
               </div>
               <div className="hidden sm:block">
                 <h1 className="text-lg md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                  Ruscles Investments
+                  Ruscle Investments
                 </h1>
                 <p className="text-xs md:text-sm text-orange-600 font-semibold tracking-wide">
                   SATISFACTION GUARANTEED
@@ -95,13 +95,13 @@ export function Navbar() {
                   <div className="flex items-center space-x-3 pb-4 border-b">
                     <Image
                       src="/images/modern-logo.png"
-                      alt="Ruscles Investments"
+                      alt="Ruscle Investments"
                       width={60}
                       height={45}
                       className="h-12 w-auto"
                     />
                     <div>
-                      <h2 className="text-lg font-bold text-blue-900">Ruscles Investments</h2>
+                      <h2 className="text-lg font-bold text-blue-900">Ruscle Investments</h2>
                       <p className="text-xs text-orange-600 font-semibold">SATISFACTION GUARANTEED</p>
                     </div>
                   </div>

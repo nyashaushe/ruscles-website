@@ -6,7 +6,7 @@ import { Zap, Snowflake, Wrench, Settings, Thermometer, Refrigerator, Shield, Cl
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Professional Services - Ruscles Investments",
+  title: "Professional Services - Ruscle Investments",
   description:
     "Comprehensive electrical and HVAC services including wiring, repairs, air conditioning, cold rooms, and refrigeration. Licensed professionals with 24/7 emergency service.",
 }

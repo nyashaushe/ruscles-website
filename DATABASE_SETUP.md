@@ -1,6 +1,6 @@
-# Database Setup Guide for Ruscles Website
+# Database Setup Guide for Ruscle Website
 
-This guide will help you set up the PostgreSQL database for your Ruscles website project.
+This guide will help you set up the PostgreSQL database for your Ruscle website project.
 
 ## Prerequisites
 
@@ -37,13 +37,13 @@ sudo systemctl enable postgresql
 psql -U postgres
 
 -- Create database
-CREATE DATABASE ruscles_website;
+CREATE DATABASE ruscle_website;
 
 -- Create user (replace with your desired username/password)
-CREATE USER ruscles_user WITH PASSWORD 'your_secure_password';
+CREATE USER ruscle_user WITH PASSWORD 'your_secure_password';
 
 -- Grant privileges
-GRANT ALL PRIVILEGES ON DATABASE ruscles_website TO ruscles_user;
+GRANT ALL PRIVILEGES ON DATABASE ruscle_website TO ruscle_user;
 
 -- Connect to the new database
 \c ruscles_website

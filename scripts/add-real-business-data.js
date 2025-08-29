@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 async function addRealBusinessData() {
     try {
-        console.log('🌱 Adding real business data to Ruscles Investments...')
+        console.log('🌱 Adding real business data to Ruscle Investments...')
 
         // 1. Update Business Information
         console.log('📋 Updating business information...')
@@ -15,13 +15,13 @@ async function addRealBusinessData() {
             await prisma.businessInfo.update({
                 where: { id: existingBusinessInfo.id },
                 data: {
-                    companyName: 'Ruscles Investments',
+                    companyName: 'Ruscle Investments',
                     tagline: 'Professional Electrical, HVAC & Refrigeration Services',
                     description: 'Leading provider of electrical, HVAC, and refrigeration services in Harare and surrounding areas. We specialize in residential, commercial, and industrial installations, maintenance, and repairs.',
-                    email: 'info@rusclesinvestments.com',
+                    email: 'info@ruscleinvestments.com',
                     phone: '+263 77 123 4567',
                     address: '123 Enterprise Road, Harare, Zimbabwe',
-                    website: 'https://rusclesinvestments.com',
+                    website: 'https://ruscleinvestments.com',
                     businessHours: {
                         monday: '8:00 AM - 6:00 PM',
                         tuesday: '8:00 AM - 6:00 PM',
@@ -70,10 +70,10 @@ async function addRealBusinessData() {
                         }
                     },
                     socialMedia: {
-                        facebook: 'https://facebook.com/rusclesinvestments',
-                        instagram: 'https://instagram.com/rusclesinvestments',
-                        linkedin: 'https://linkedin.com/company/rusclesinvestments',
-                        twitter: 'https://twitter.com/rusclesinvestments'
+                        facebook: 'https://facebook.com/ruscleinvestments',
+                        instagram: 'https://instagram.com/ruscleinvestments',
+                        linkedin: 'https://linkedin.com/company/ruscleinvestments',
+                        twitter: 'https://twitter.com/ruscleinvestments'
                     },
                     updatedBy: 'admin'
                 }
@@ -174,7 +174,7 @@ async function addRealBusinessData() {
                 customerName: 'Sarah Moyo',
                 customerEmail: 'sarah.moyo@email.com',
                 rating: 5,
-                content: 'Ruscles Investments did an excellent job rewiring our house. The team was professional, punctual, and the work was completed to the highest standard.',
+                content: 'Ruscle Investments did an excellent job rewiring our house. The team was professional, punctual, and the work was completed to the highest standard.',
                 project: 'Residential Electrical Rewiring',
                 status: 'APPROVED',
                 isFeatured: true,
@@ -184,7 +184,7 @@ async function addRealBusinessData() {
                 customerName: 'Fresh Foods Supermarket',
                 customerEmail: 'manager@freshfoods.co.zw',
                 rating: 5,
-                content: 'Outstanding service! When our cold room system failed, Ruscles responded immediately and had it fixed within hours.',
+                content: 'Outstanding service! When our cold room system failed, Ruscle responded immediately and had it fixed within hours.',
                 project: 'Commercial Cold Room Repair',
                 status: 'APPROVED',
                 isFeatured: true,

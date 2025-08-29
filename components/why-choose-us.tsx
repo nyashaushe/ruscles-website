@@ -40,7 +40,7 @@ export function WhyChooseUs() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12 md:mb-16">
           <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 md:mb-4">
-            Why Choose Ruscles Investments?
+            Why Choose Ruscle Investments?
           </h2>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-4">
             We're committed to providing exceptional service and building long-term relationships with our clients

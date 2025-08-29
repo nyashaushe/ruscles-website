@@ -22,7 +22,7 @@ export function ModernHero() {
                 <div className="relative bg-white/10 backdrop-blur-sm rounded-xl md:rounded-2xl p-3 md:p-4 mr-3 md:mr-4 border border-white/20">
                   <Image
                     src="/images/modern-logo.png"
-                    alt="Ruscles Investments"
+                    alt="Ruscle Investments"
                     width={80}
                     height={60}
                     className="h-12 md:h-16 lg:h-20 w-auto drop-shadow-2xl"
@@ -30,7 +30,7 @@ export function ModernHero() {
                 </div>
                 <div>
                   <h1 className="text-xl md:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent drop-shadow-lg">
-                    Ruscles Investments
+                    Ruscle Investments
                   </h1>
                   <p className="text-orange-400 font-bold text-sm md:text-base lg:text-lg tracking-wide drop-shadow-md">
                     SATISFACTION GUARANTEED

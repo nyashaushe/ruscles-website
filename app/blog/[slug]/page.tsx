@@ -6,7 +6,7 @@ import { Calendar, User, Clock, ArrowLeft, Share2 } from "lucide-react"
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: "Blog Post - Ruscles Investments",
+  title: "Blog Post - Ruscle Investments",
   description: "Read our latest insights on electrical and HVAC services.",
 }
 

@@ -1,8 +1,8 @@
-# Ruscles Investments
+# Ruscle Investments
 
 *Automatically synced with your [v0.dev](https://v0.dev) deployments*
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/nyashaushes-projects/v0-ruscles-investments)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/nyashaushes-projects/v0-ruscle-investments)
 [![Built with v0](https://img.shields.io/badge/Built%20with-v0.dev-black?style=for-the-badge)](https://v0.dev/chat/projects/rDHZQPF49Vo)
 
 ## Overview
@@ -14,7 +14,7 @@ Any changes you make to your deployed app will be automatically pushed to this r
 
 Your project is live at:
 
-**[https://vercel.com/nyashaushes-projects/v0-ruscles-investments](https://vercel.com/nyashaushes-projects/v0-ruscles-investments)**
+**[https://vercel.com/nyashaushes-projects/v0-ruscle-investments](https://vercel.com/nyashaushes-projects/v0-ruscle-investments)**
 
 ## Build your app
 

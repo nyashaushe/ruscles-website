@@ -4,7 +4,7 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 Setting up Ruscles Website Database...\n');
+console.log('🚀 Setting up Ruscle Website Database...\n');
 
 // Check if .env.local exists
 const envPath = path.join(process.cwd(), '.env.local');

@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 Ruscles Website - Quick Database Setup\n');
+console.log('🚀 Ruscle Website - Quick Database Setup\n');
 
 console.log('📋 Prerequisites:');
 console.log('  ✅ Node.js and pnpm installed');
@@ -14,13 +14,13 @@ console.log('🔧 Step-by-step setup:\n');
 
 console.log('1️⃣  Create PostgreSQL database and user:');
 console.log('   psql -U postgres');
-console.log('   CREATE DATABASE ruscles_website;');
-console.log('   CREATE USER ruscles_user WITH PASSWORD \'your_password\';');
-console.log('   GRANT ALL PRIVILEGES ON DATABASE ruscles_website TO ruscles_user;');
+console.log('   CREATE DATABASE ruscle_website;');
+console.log('   CREATE USER ruscle_user WITH PASSWORD \'your_password\';');
+console.log('   GRANT ALL PRIVILEGES ON DATABASE ruscle_website TO ruscle_user;');
 console.log('   \\q\n');
 
 console.log('2️⃣  Create .env.local file with your database credentials:');
-console.log('   DATABASE_URL="postgresql://ruscles_user:your_password@localhost:5432/ruscles_website"\n');
+console.log('   DATABASE_URL="postgresql://ruscle_user:your_password@localhost:5432/ruscle_website"\n');
 
 console.log('3️⃣  Run the setup script:');
 console.log('   pnpm run db:setup\n');

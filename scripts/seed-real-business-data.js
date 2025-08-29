@@ -4,7 +4,7 @@ const prisma = new PrismaClient()
 
 async function seedRealBusinessData() {
     try {
-        console.log('🌱 Seeding Ruscles Investments with real business data...')
+        console.log('🌱 Seeding Ruscle Investments with real business data...')
 
         // 1. Create Business Information
         console.log('📋 Creating business information...')
@@ -17,13 +17,13 @@ async function seedRealBusinessData() {
             await prisma.businessInfo.update({
                 where: { id: existingBusinessInfo.id },
                 data: {
-                    companyName: 'Ruscles Investments',
+                    companyName: 'Ruscle Investments',
                     tagline: 'Professional Electrical, HVAC & Refrigeration Services',
                     description: 'Leading provider of electrical, HVAC, and refrigeration services in Harare and surrounding areas.',
-                    email: 'info@rusclesinvestments.com',
+                    email: 'info@ruscleinvestments.com',
                     phone: '+263 77 123 4567',
                     address: '123 Enterprise Road, Harare, Zimbabwe',
-                    website: 'https://rusclesinvestments.com',
+                    website: 'https://ruscleinvestments.com',
                     businessHours: {
                         monday: '8:00 AM - 6:00 PM',
                         tuesday: '8:00 AM - 6:00 PM',
@@ -84,13 +84,13 @@ async function seedRealBusinessData() {
             // Create new business info
             await prisma.businessInfo.create({
                 data: {
-                    companyName: 'Ruscles Investments',
+                    companyName: 'Ruscle Investments',
                     tagline: 'Professional Electrical, HVAC & Refrigeration Services',
                     description: 'Leading provider of electrical, HVAC, and refrigeration services in Harare and surrounding areas.',
-                    email: 'info@rusclesinvestments.com',
+                    email: 'info@ruscleinvestments.com',
                     phone: '+263 77 123 4567',
                     address: '123 Enterprise Road, Harare, Zimbabwe',
-                    website: 'https://rusclesinvestments.com',
+                    website: 'https://ruscleinvestments.com',
                     businessHours: {
                         monday: '8:00 AM - 6:00 PM',
                         tuesday: '8:00 AM - 6:00 PM',
@@ -237,7 +237,7 @@ async function seedRealBusinessData() {
                 customerName: 'Sarah Moyo',
                 customerEmail: 'sarah.moyo@email.com',
                 rating: 5,
-                content: 'Ruscles Investments did an excellent job rewiring our house. The team was professional, punctual, and the work was completed to the highest standard.',
+                content: 'Ruscle Investments did an excellent job rewiring our house. The team was professional, punctual, and the work was completed to the highest standard.',
                 project: 'Residential Electrical Rewiring',
                 status: 'APPROVED',
                 isFeatured: true,
@@ -247,7 +247,7 @@ async function seedRealBusinessData() {
                 customerName: 'Fresh Foods Supermarket',
                 customerEmail: 'manager@freshfoods.co.zw',
                 rating: 5,
-                content: 'Outstanding service! When our cold room system failed, Ruscles responded immediately and had it fixed within hours.',
+                content: 'Outstanding service! When our cold room system failed, Ruscle responded immediately and had it fixed within hours.',
                 project: 'Commercial Cold Room Repair',
                 status: 'APPROVED',
                 isFeatured: true,

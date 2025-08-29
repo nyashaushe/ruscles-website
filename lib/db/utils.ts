@@ -17,10 +17,10 @@ export async function seedDatabase() {
     try {
         // Create default admin user
         const adminUser = await prisma.user.upsert({
-            where: { email: 'admin@ruscles.com' },
+            where: { email: 'admin@ruscle.com' },
             update: {},
             create: {
-                email: 'admin@ruscles.com',
+                email: 'admin@ruscle.com',
                 name: 'Admin User',
                 role: 'ADMIN',
                 isActive: true,
@@ -33,20 +33,20 @@ export async function seedDatabase() {
             update: {},
             create: {
                 id: 'default',
-                companyName: 'Ruscles',
+                companyName: 'Ruscle Investments',
                 tagline: 'Your Trusted Service Partner',
                 description: 'Professional electrical, HVAC, and refrigeration services',
-                email: 'info@ruscles.com',
+                email: 'info@ruscleinvestments.com',
                 phone: '+1 (555) 123-4567',
-                website: 'https://ruscles.com',
+                website: 'https://ruscleinvestments.com',
                 updatedBy: adminUser.id,
             },
         })
 
         // Create default settings
         const defaultSettings = [
-            { key: 'site_title', value: 'Ruscles - Professional Services', description: 'Website title' },
-            { key: 'contact_email', value: 'info@ruscles.com', description: 'Primary contact email' },
+            { key: 'site_title', value: 'Ruscle Investments - Professional Services', description: 'Website title' },
+            { key: 'contact_email', value: 'info@ruscleinvestments.com', description: 'Primary contact email' },
             { key: 'business_hours', value: 'Monday-Friday: 8AM-6PM', description: 'Business hours' },
         ]
 
