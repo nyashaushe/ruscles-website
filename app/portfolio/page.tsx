@@ -39,7 +39,7 @@ export default function PortfolioPage() {
         "Reduced food spoilage by 40%",
         "Client satisfaction: 100%",
       ],
-    image: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80', // Cold Room Installation
+      image: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&w=800&q=80', // Industrial cold storage facility
     },
     {
       title: "Residential Electrical Rewiring",
@@ -67,7 +67,7 @@ export default function PortfolioPage() {
         "Improved electrical safety",
         "Increased property value by 15%",
       ],
-    image: 'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=800&q=80', // Electrical Rewiring
+      image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80', // Electrical panel and wiring
     },
     {
       title: "Restaurant HVAC System Upgrade",
@@ -95,7 +95,7 @@ export default function PortfolioPage() {
         "Enhanced customer comfort",
         "Noise levels reduced by 50%",
       ],
-    image: 'https://images.unsplash.com/photo-1581091012184-7e0cdfbb6795?auto=format&fit=crop&w=800&q=80', // Restaurant HVAC
+      image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=800&q=80', // Restaurant kitchen with ventilation
     },
     {
       title: "Office Building Electrical Maintenance",
@@ -123,7 +123,7 @@ export default function PortfolioPage() {
         "Improved tenant satisfaction",
         "Extended equipment lifespan",
       ],
-    image: 'https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?auto=format&fit=crop&w=800&q=80', // Electrical Maintenance
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80', // Modern office building
     },
     {
       title: "Industrial Freezer Installation",
@@ -151,7 +151,7 @@ export default function PortfolioPage() {
         "Full food safety compliance",
         "ROI achieved within 18 months",
       ],
-    image: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80', // Industrial Freezer
+      image: 'https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=800&q=80', // Industrial freezer facility
     },
     {
       title: "Residential AC Installation",
@@ -179,7 +179,7 @@ export default function PortfolioPage() {
         "100% customer satisfaction",
         "Ongoing maintenance contracts secured",
       ],
-    image: 'https://images.unsplash.com/photo-1508873699372-7aeab60b44c1?auto=format&fit=crop&w=800&q=80', // AC Installation
+      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80', // Residential air conditioning unit
     },
   ]
 

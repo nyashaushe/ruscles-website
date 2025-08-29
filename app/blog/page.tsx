@@ -20,7 +20,7 @@ export default function BlogPage() {
     date: "March 15, 2024",
     readTime: "8 min read",
     category: "Safety",
-    image: "/placeholder.svg?height=400&width=600",
+    image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=600&q=80", // Electrical safety equipment
     slug: "electrical-safety-tips-homeowners-2024",
   }
 
@@ -33,7 +33,7 @@ export default function BlogPage() {
       date: "March 10, 2024",
       readTime: "6 min read",
       category: "HVAC",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=400&q=80", // Air conditioning system
       slug: "choose-right-air-conditioning-system",
     },
     {
@@ -44,7 +44,7 @@ export default function BlogPage() {
       date: "March 5, 2024",
       readTime: "5 min read",
       category: "Electrical",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80", // Electrical panel
       slug: "electrical-panel-upgrade-signs",
     },
     {
@@ -55,7 +55,7 @@ export default function BlogPage() {
       date: "February 28, 2024",
       readTime: "7 min read",
       category: "Commercial",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&w=400&q=80", // Commercial refrigeration
       slug: "energy-efficient-refrigeration-businesses",
     },
     {
@@ -66,7 +66,7 @@ export default function BlogPage() {
       date: "February 20, 2024",
       readTime: "6 min read",
       category: "Maintenance",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?auto=format&fit=crop&w=400&q=80", // Cold storage maintenance
       slug: "cold-room-maintenance-best-practices",
     },
     {
@@ -77,7 +77,7 @@ export default function BlogPage() {
       date: "February 15, 2024",
       readTime: "8 min read",
       category: "Technology",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=400&q=80", // Smart home technology
       slug: "smart-home-electrical-upgrades",
     },
     {
@@ -88,7 +88,7 @@ export default function BlogPage() {
       date: "February 10, 2024",
       readTime: "5 min read",
       category: "Emergency",
-      image: "/placeholder.svg?height=300&width=400",
+      image: "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=400&q=80", // HVAC technician working
       slug: "emergency-hvac-repairs-when-to-call",
     },
   ]

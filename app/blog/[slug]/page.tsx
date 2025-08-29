@@ -53,19 +53,19 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     date: "March 15, 2024",
     readTime: "8 min read",
     category: "Safety",
-    image: "/placeholder.svg?height=400&width=800",
+    image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=800&q=80", // Electrical safety equipment
   }
 
   const relatedPosts = [
     {
       title: "Signs Your Electrical Panel Needs an Upgrade",
       slug: "electrical-panel-upgrade-signs",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=300&q=80", // Electrical panel
     },
     {
       title: "Smart Home Electrical Upgrades: What You Need to Know",
       slug: "smart-home-electrical-upgrades",
-      image: "/placeholder.svg?height=200&width=300",
+      image: "https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=300&q=80", // Smart home technology
     },
   ]
 
