@@ -7,7 +7,7 @@ import { Footer } from "@/components/footer"
 import AuthProvider from "@/components/providers/session-provider"
 import { AdminLayoutWrapper } from "@/components/admin/admin-layout-wrapper"
 import { Toaster } from "@/components/ui/toaster"
-import { WhatsAppButton } from "@/components/whatsapp-button"
+import { WhatsAppButtonWrapper } from "@/components/whatsapp-button-wrapper"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -38,7 +38,7 @@ export default function RootLayout({
           >
             {children}
           </AdminLayoutWrapper>
-          <WhatsAppButton
+          <WhatsAppButtonWrapper
             position="bottom-right"
             className="z-[60]"
           />
